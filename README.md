@@ -1,5 +1,44 @@
-## Options for upgrades
-This controller board and HV board is designed to replace the existing controller board of the Mara X. By using only the hardware and software as in this repository the coffee machine gains potentially many new features, like MQTT support, improved temperature stability a cleaning mode and many more things. However, this project is much more powerful when combined with https://github.com/andia89/MaraXEvolution-HMI and https://github.com/andia89/MaraXEvolution-Scale as well as a pressure transducer upgrade as described in the [Assembly instructions](#assembly-instructions). 
+# MaraX Evolution - Main Controller
+
+This repository contains the hardware design and firmware for the **MaraX Evolution** main controller board. This project is designed to replace the stock controller of the Lelit Mara X espresso machine, adding advanced features such as PID temperature control, pressure profiling, weighing scale integration, and WiFi connectivity.
+
+## Features
+
+* **Precise Temperature Control:** PID implementation for boiler temperature stability.
+* **Pressure Profiling:** Control over the pump pressure (requires compatible hardware).
+* **Scale Integration:** Native support for the [MaraX Evolution Scale](https://github.com/andia89/maraxevolution-scale).
+* **HMI Support:** Interfacing with the [MaraX Evolution HMI](https://github.com/andia89/maraxevolution-hmi) (Nextion display).
+* **WiFi & MQTT:** Remote monitoring and control via MQTT.
+
+## Repository Structure
+
+* `controller_board/`: KiCad v6 hardware design files (schematics, PCB layout, and fabrication files).
+* `firmware/`: PlatformIO project source code for the ESP32-based controller.
+
+## Hardware Assembly
+
+1.  **PCB Fabrication:** Use the Gerber and Drill files provided in `controller_board/jlcpcb/production_files/` to order the PCB.
+2.  **Assembly:** Solder the components according to the BOM (`BOM-controller_board.csv`). The board features an ESP32/Arduino-compatible footprint.
+3.  **Installation:** Replace the existing Mara X controller with this board, ensuring all connections (sensors, pump, heating element) are mapped correctly.
+
+## Firmware Compilation
+
+The firmware is built using **PlatformIO**.
+
+1.  Install [VSCode](https://code.visualstudio.com/) and the [PlatformIO extension](https://platformio.org/).
+2.  Clone this repository.
+3.  Open the `firmware` folder in PlatformIO.
+4.  Configure `platformio.ini` if necessary (e.g., to select specific build environments or upload ports).
+5.  Click the **Build** icon (checkmark) to compile.
+6.  Connect your controller board via USB and click **Upload** (arrow).
+
+## Dependencies
+
+This firmware relies on the following libraries (automatically handled by PlatformIO):
+* `PID_v1`
+* `SimpleKalmanFilter`
+* `dimmable_light`
+* `NextionX2`
 
 ## Firmware setup
 
