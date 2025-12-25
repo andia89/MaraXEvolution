@@ -1,0 +1,9 @@
+Manufacturer=Aavid Thermalloy
+PartNumber=7178DG
+PartCategory=Hardware
+PackageCategory=Other
+PinCount=1
+Version=1.6
+Released=2024-03-25 11:38:46
+Downloaded=2025-08-23 13:32:21
+3D=Y

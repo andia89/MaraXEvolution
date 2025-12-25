@@ -1,0 +1,16 @@
+.VJ2220Y103KXUSTX2 :1 ;Capacitor MLCC 2220 250Vac X2 10nF Vishay 10nF Multilayer Ceramic Capacitor (MLCC) 250 V ac +/-10% X7R dielectric VJ Surface Mount max op. temp. +125C
+CAPC5651X218N
+*STM C
+*NGS
+*PLB 1="1" 2="2"
+*MXP 2
+*DFN VJ2220Y103KXUSTX2
+~!Mouser Part Number (77-VJ2220Y103KXUSTX2)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Vishay-Vitramon/VJ2220Y103KXUSTX2?qs=IbI7CwzxyWd9lEwhIfQA2A%3D%3D)
+~!Manufacturer_Name (Vishay)
+~!Manufacturer_Part_Number (VJ2220Y103KXUSTX2)
+~!Link Datasheet (https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-DGA9/2510523.pdf)
+~!Height (2.18mm)
+~!3D_Model (VJ2220Y103KXUSTX2)
+VJ2220Y103KXUSTX2
+1.1!U 2.1!U 

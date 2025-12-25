@@ -1,0 +1,6 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "BAT16-600b")(type "KiCad")(uri "${KIPRJMOD}/LIB_BTA16-600BWRG/BTA16-600BWRG/KiCad/BTA16-600BWRG.kicad_sym")(options "")(descr ""))
+  (lib (name "H11L1")(type "KiCad")(uri "${KIPRJMOD}/LIB_H11L1M/H11L1M/KiCad/H11L1M.kicad_sym")(options "")(descr ""))
+  (lib (name "VJ2220Y103KXUSTX2")(type "KiCad")(uri "${KIPRJMOD}/LIB_VJ2220Y103KXUSTX2/VJ2220Y103KXUSTX2/KiCad/VJ2220Y103KXUSTX2.kicad_sym")(options "")(descr ""))
+)

@@ -1,0 +1,16 @@
+.H11L1M :1 ;Logic compatible output sinks 16mA at 0.4Vmaximum; High data rate, 1MHz typical (NRZ); Microprocessor compatible drive; Underwriters Laboratory (UL) recognizedfile #E90700, Volume 2; Guaranteed on/off threshold hysteresis ; Wide supply voltage capability, compatible with allpopular logic systems; Free from latch up and oscilliation throughout voltageand temperature ranges.; VDE recognized  File#102497  Add option V(e.g., H11LIVM)
+DIP762W51P254L851H508Q6N
+*STM IC
+*NGS
+*PLB 1="ANODE" 2="CATHODE" 3="NC" 4="VO" 5="GND" 6="VCC"
+*MXP 6
+*DFN H11L1M
+~!Mouser Part Number (512-H11L1M)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/onsemi-Fairchild/H11L1M?qs=P36CEcFBmYxn5ViwkIckpw%3D%3D)
+~!Manufacturer_Name (onsemi)
+~!Manufacturer_Part_Number (H11L1M)
+~!Link Datasheet (https://www.onsemi.com/pub/Collateral/H11L3M-D.PDF)
+~!Height (5.08mm)
+~!3D_Model (H11L1M)
+H11L1M
+1.1!U 2.1!U 3.1!U 6.1!U 5.1!U 4.1!U 

@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP H11L1M
+D Logic compatible output sinks 16mA at 0.4Vmaximum; High data rate, 1MHz typical (NRZ); Microprocessor compatible drive; Underwriters Laboratory (UL) recognizedfile #E90700, Volume 2; Guaranteed on/off threshold hysteresis ; Wide supply voltage capability, compatible with allpopular logic systems; Free from latch up and oscilliation throughout voltageand temperature ranges.; VDE recognized  File#102497  Add option V(e.g., H11LIVM)
+K
+F https://www.onsemi.com/pub/Collateral/H11L3M-D.PDF
+$ENDCMP
+#
+#End Doc Library

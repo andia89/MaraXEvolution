@@ -1,0 +1,9 @@
+Manufacturer=DB Unlimited
+PartNumber=IE092503-1
+PartCategory=Undefined or Miscellaneous
+PackageCategory=Other
+PinCount=2
+Version=1.4
+Released=2019-03-07 10:43:14
+Downloaded=2025-08-22 20:11:27
+3D=Y

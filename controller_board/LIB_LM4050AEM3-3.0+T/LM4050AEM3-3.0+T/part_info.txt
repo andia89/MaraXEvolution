@@ -1,0 +1,9 @@
+Manufacturer=Analog Devices
+PartNumber=LM4050AEM3-3.0+T
+PartCategory=Integrated Circuit
+PackageCategory=SOT23 (3-Pin)
+PinCount=3
+Version=2.1
+Released=2023-04-15 11:05:36
+Downloaded=2025-09-23 16:35:36
+3D=Y

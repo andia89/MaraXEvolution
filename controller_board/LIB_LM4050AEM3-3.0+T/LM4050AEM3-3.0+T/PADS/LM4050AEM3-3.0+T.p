@@ -1,0 +1,20 @@
+*PADS-LIBRARY-PART-TYPES-V9*
+
+LM4050AEM3-3.0+T SOT95P237X112-3N I ANA 7 1 0 0 0
+TIMESTAMP 2025.09.23.16.35.36
+"Mouser Part Number" 700-LM4050AEM3-3.0T
+"Mouser Price/Stock" https://www.mouser.co.uk/ProductDetail/Maxim-Integrated/LM4050AEM3-3.0%2bT?qs=GxOUx7aO6nwirvG06jDdlw%3D%3D
+"Manufacturer_Name" Analog Devices
+"Manufacturer_Part_Number" LM4050AEM3-3.0+T
+"Description" 50ppm/&deg;C (max) Temperature Coefficient Guaranteed over the -40&deg;C to +125&deg;C Temperature RangeUltra-Small 3-Pin SC70 Package0.1% (max) Initial AccuracyWide Operating Current Range: 60&micro;A to 15mALow 28&micro;VRMS Output Noise (10Hz to 10kHz)1.225V, 2.048V, 2.500V, 3.000V, 3.3V, 4.096V, and 5.000V Fixed Reverse Breakdown VoltagesNo Output Capacitors RequiredTolerates Capacitive LoadsAEC-Q100 Qualified, Refer to Ordering Information for the Specific /V Versions
+"Datasheet Link" https://www.analog.com/LM4050/datasheet
+"Geometry.Height" 1.12mm
+GATE 1 3 0
+LM4050AEM3-3.0+T
+1 0 U +
+2 0 U -
+3 0 U N.C.
+
+*END*
+*REMARK* SamacSys ECAD Model
+1604914/1750034/2.50/3/2/Integrated Circuit

@@ -1,0 +1,16 @@
+.BTA16-600BWRG :1 ;TRIAC BTA16-600BWRG, 600V, Gate Trigger 1.3V 50mA, TO-220AB Insulated 3-Pin
+TO255P460X1020X2005-3P
+*STM Q
+*NGS
+*PLB 1="A1" 2="A2" 3="G"
+*MXP 3
+*DFN BTA16-600BWRG
+~!Mouser Part Number (511-BTA16-600BW)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/STMicroelectronics/BTA16-600BWRG?qs=%2Fa2FmOVcLL%252Bg0jsDx0ejhQ%3D%3D)
+~!Manufacturer_Name (STMicroelectronics)
+~!Manufacturer_Part_Number (BTA16-600BWRG)
+~!Link Datasheet (https://www.st.com/resource/en/datasheet/t1610.pdf)
+~!Height (4.6mm)
+~!3D_Model (BTA16-600BWRG)
+BTA16-600BWRG
+1.1!U 2.1!U 3.1!U 

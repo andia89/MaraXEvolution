@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'TPS1HTC30AQPWPRQ1'
+CLASS = IC
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Texas Instruments", "TPS1HTC30AQPWPRQ1" (!) = "", "SOP65P640X120-15N", "Small Outline Packages", "595-TPS1HTC30AQPWPQ1", "https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TPS1HTC30AQPWPRQ1?qs=ST9lo4GX8V3KvUd2Q%2FnDqA%3D%3D", "Power Switch ICs - Power Distribution Automotive, 60-V, 6-A, 30-mO, one-channel smart high-side switch with adjustable current limit 14-HTSSOP -40 to 125", "https://www.ti.com/lit/ds/symlink/tps1htc30-q1.pdf?ts=1723072122521", "1.2 mm"
+END_PART
+
+END.

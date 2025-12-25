@@ -1,0 +1,9 @@
+Manufacturer=Vishay
+PartNumber=VJ2220Y103KXUSTX2
+PartCategory=Capacitor
+PackageCategory=Capacitor Chip Non-polarised
+PinCount=2
+Version=4.1
+Released=2017-02-16 07:23:45
+Downloaded=2025-12-02 18:37:28
+3D=Y

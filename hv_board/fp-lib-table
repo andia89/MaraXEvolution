@@ -1,0 +1,6 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "h11l1")(type "KiCad")(uri "${KIPRJMOD}/ul_H11L1/KiCADv6/footprints.pretty")(options "")(descr ""))
+  (lib (name "bat16-600")(type "KiCad")(uri "${KIPRJMOD}/LIB_BTA16-600BWRG/BTA16-600BWRG/KiCad")(options "")(descr ""))
+  (lib (name "VJ2220Y103KXUSTX2")(type "KiCad")(uri "${KIPRJMOD}/LIB_VJ2220Y103KXUSTX2/VJ2220Y103KXUSTX2/KiCad")(options "")(descr ""))
+)

@@ -1,0 +1,16 @@
+.TPS1HTC30AQPWPRQ1 :1 ;Power Switch ICs - Power Distribution Automotive, 60-V, 6-A, 30-mO, one-channel smart high-side switch with adjustable current limit 14-HTSSOP -40 to 125
+SOP65P640X120-15N
+*STM IC
+*NGS
+*PLB 1="GND" 2="EN" 3="DIAG_EN" 4="'FAULT'" 5="LATCH" 6="SNS" 7="ILIM" 8="VOUT_1" 9="VOUT_2" 10="VOUT_3" 11="NC" 12="VS_1" 13="VS_2" 14="VS_3" 15="THERMAL PAD"
+*MXP 15
+*DFN TPS1HTC30AQPWPRQ1
+~!Mouser Part Number (595-TPS1HTC30AQPWPQ1)
+~!Link Mouser Price/Stock (https://www.mouser.co.uk/ProductDetail/Texas-Instruments/TPS1HTC30AQPWPRQ1?qs=ST9lo4GX8V3KvUd2Q%2FnDqA%3D%3D)
+~!Manufacturer_Name (Texas Instruments)
+~!Manufacturer_Part_Number (TPS1HTC30AQPWPRQ1)
+~!Link Datasheet (https://www.ti.com/lit/ds/symlink/tps1htc30-q1.pdf?ts=1723072122521)
+~!Height (1.2mm)
+~!3D_Model (TPS1HTC30AQPWPRQ1)
+TPS1HTC30AQPWPRQ1
+1.1!G 2.1!I 3.1!I 4.1!Y 5.1!I 6.1!Y 7.1!Y 15.1!U 14.1!P 13.1!P 12.1!P 11.1!U 10.1!P 9.1!P 8.1!P 

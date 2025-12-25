@@ -1,0 +1,92 @@
+;Proteus Design Interchange Format
+(PDIF
+ (vendor "SamacSys Limited")
+ (version 1 0)
+ (library
+  (part "7178DG"
+   (description "Heat Sinks Channel Style Stamped Heatsink with Single Narrow/Integrated Clip for TO-220, Copper, Vertical Mounting, 35.7 n Thermal Resistance, 2.54mm Hole")
+   (family "ANA")
+   (package "7178DG")
+   (attribute "Datasheet Link" "https://4donline.ihs.com/images/VipMasterIC/IC/AAVT/AAVTS00133/AAVTS00064-1.pdf?hkey=CECEF36DEECDED6468708AAF2E19C0C6")
+   (attribute "Geometry.Height" "22.86mm")
+   (attribute "Mouser Part Number" "532-7178DG")
+   (attribute "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Aavid/7178DG?qs=U7T%2FEnMyvTs%252BrLPKYORuUQ%3D%3D")
+   (attribute "Manufacturer_Name" "Aavid Thermalloy")
+   (attribute "Manufacturer_Part_Number" "7178DG")
+   (gate
+    (symbol "7178DG")
+    (pin "1" 1 PS)
+   )
+  )
+  (symbol "7178DG"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 200 100) (pt 600 100) (pt 600 -100) (pt 200 -100) (pt 200 100) (closed))
+   )
+   (terminal
+    (body (symbol "PIN") (pt 0 0) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+  )
+  (symbol "PIN"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 200 0))))
+  (symbol "PINSHORT"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 100 0))))
+  (package "7178DG"
+   (units MM)
+   (layer TASM
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed true)
+      (pt -6.605 0.635)
+      (pt 6.605 0.635)
+      (pt 6.605 -8.885)
+      (pt -6.605 -8.885)
+      (pt -6.605 0.635))))
+   (layer OCCA
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed true)
+      (pt -7.605 2.905)
+      (pt 7.605 2.905)
+      (pt 7.605 -9.885)
+      (pt -7.605 -9.885)
+      (pt -7.605 2.905))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed false)
+      (pt -2.4 0.635)
+      (pt -6.605 0.635)
+      (pt -6.605 -8.885)
+      (pt 6.605 -8.885)
+      (pt 6.605 0.635)
+      (pt 2.4 0.635))))
+   (leg 1 (pt 0.000 0.000) (padstack 0))
+   (padstack 0
+    (hole 2.54)
+    (plated true)
+    (pad (layer TCOP) (round 3.810))
+    (pad (layer INNER) (round 3.810))
+    (pad (layer BCOP) (round 3.810))
+   )
+   (model "7178DG.stp"
+    (euler 0 0 0)
+    (offset 0 0 0)
+   )
+  )
+ )
+)

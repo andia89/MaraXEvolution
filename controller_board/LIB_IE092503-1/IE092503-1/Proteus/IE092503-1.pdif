@@ -1,0 +1,97 @@
+;Proteus Design Interchange Format
+(PDIF
+ (vendor "SamacSys Limited")
+ (version 1 0)
+ (library
+  (part "IE092503-1"
+   (description "Audio Indicators & Alerts Electro-Mechanical Indicator")
+   (family "ANA")
+   (package "IE0925031")
+   (attribute "Datasheet Link" "https://www.mouser.cn/datasheet/2/683/IE092503-1-358381.pdf")
+   (attribute "Geometry.Height" "5mm")
+   (attribute "Mouser Part Number" "497-IE092503-1")
+   (attribute "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/DB-Unlimited/IE092503-1?qs=t9M3m0YJX4OMgcFlTn3Auw%3D%3D")
+   (attribute "Manufacturer_Name" "DB Unlimited")
+   (attribute "Manufacturer_Part_Number" "IE092503-1")
+   (gate
+    (symbol "IE092503-1")
+    (pin "1" 1 PS)
+    (pin "2" 2 PS)
+   )
+  )
+  (symbol "IE092503-1"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 200 100) (pt 600 100) (pt 600 -200) (pt 200 -200) (pt 200 100) (closed))
+   )
+   (terminal
+    (body (symbol "PIN") (pt 0 -100) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 0) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+  )
+  (symbol "PIN"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 200 0))))
+  (symbol "PINSHORT"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 100 0))))
+  (package "IE0925031"
+   (units MM)
+   (layer TASM
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed true)
+      (pt -4.8 2.5)
+      (arc (pt -4.800 2.500) (pt -4.800 -2.300) (pt 4.800 7.300) (start 180.0) (sweep 180.0))
+      (pt 4.8 2.5)
+      (arc (pt 4.800 2.500) (pt -4.800 -2.300) (pt 4.800 7.300) (start 180.0) (sweep .0))
+      (pt -4.8 2.5))))
+   (layer TSLK
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed true)
+      (pt -4.8 2.5)
+      (arc (pt -4.800 2.500) (pt -4.800 -2.300) (pt 4.800 7.300) (start 180.0) (sweep 180.0))
+      (pt 4.8 2.5)
+      (arc (pt 4.800 2.500) (pt -4.800 -2.300) (pt 4.800 7.300) (start 180.0) (sweep .0))
+      (pt -4.8 2.5))))
+   (layer OCCA
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed true)
+      (pt -5.4 2.5)
+      (arc (pt -5.400 2.500) (pt -5.400 -2.900) (pt 5.400 7.900) (start 180.0) (sweep 180.0))
+      (pt 5.4 2.5)
+      (arc (pt 5.400 2.500) (pt -5.400 -2.900) (pt 5.400 7.900) (start 180.0) (sweep .0))
+      (pt -5.4 2.5))))
+   (leg 1 (pt 0.000 0.000) (padstack 0))
+   (leg 2 (pt 0.000 5.000) (padstack 0))
+   (padstack 0
+    (hole 0.8)
+    (plated true)
+    (pad (layer TCOP) (round 1.300))
+    (pad (layer INNER) (round 1.300))
+    (pad (layer BCOP) (round 1.300))
+   )
+   (model "IE092503-1.stp"
+    (euler 0 0 0)
+    (offset 0 0 0)
+   )
+  )
+ )
+)

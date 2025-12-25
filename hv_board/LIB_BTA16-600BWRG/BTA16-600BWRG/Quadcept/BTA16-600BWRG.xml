@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--/179189/1750034/2.50/3/2/Triac A/-->
+<quadcept_library>
+  <setting unit="mil" />
+  <textstyle name="Default" height="47.244094488189" strokewidth="7.8740157480315" charwidth="47.244094488189" />
+  <textstyle name="Dimension" height="19.6850393700787" strokewidth="0" charwidth="19.6850393700787" />
+  <textstyle name="H127W0635TH00762" height="50" strokewidth="3" charwidth="25" />
+  <textstyle name="H15W15TH02" height="59.0551181102362" strokewidth="7.8740157480315" charwidth="59.0551181102362" />
+  <padstyle name="c198_h132" surface="False" plated="True" isvia="False" nopaste="True" nomask="True" complex="False" holesize="51.968503937007">
+    <padshape layer="TOP" shape="round" width="77.952755905511" height="77.952755905511" />
+    <padshape layer="TOP_SOLDER_MASK" shape="round" width="85.826771653542" height="85.826771653542" />
+    <padshape layer="INNER" shape="round" width="77.952755905511" height="77.952755905511" />
+    <padshape layer="BOTTOM" shape="round" width="77.952755905511" height="77.952755905511" />
+    <padshape layer="BOTTOM_SOLDER_MASK" shape="round" width="85.826771653542" height="85.826771653542" />
+  </padstyle>
+  <padstyle name="s198_h132" surface="False" plated="True" isvia="False" nopaste="True" nomask="True" complex="False" holesize="51.968503937007">
+    <padshape layer="TOP" shape="square" width="77.952755905511" height="77.952755905511" />
+    <padshape layer="TOP_SOLDER_MASK" shape="square" width="85.826771653542" height="85.826771653542" />
+    <padshape layer="INNER" shape="round" width="77.952755905511" height="77.952755905511" />
+    <padshape layer="BOTTOM" shape="square" width="77.952755905511" height="77.952755905511" />
+    <padshape layer="BOTTOM_SOLDER_MASK" shape="square" width="85.826771653542" height="85.826771653542" />
+  </padstyle>
+  <footprint name="TO255P460X1020X2005-3P" originx="0" originy="0" pickpointx="0" pickpointy="0">
+    <pcbpin number="1" name="1" style="s198_h132" originx="0" originy="0" rotation="90" />
+    <pcbpin number="2" name="2" style="c198_h132" originx="100.3937007874" originy="0" rotation="90" />
+    <pcbpin number="3" name="3" style="c198_h132" originx="200.7874015748" originy="0" rotation="90" />
+    <line layer="TOP_PLACE_BOUND" originx="-114.17322834646" originy="125.9842519685" endx="314.96062992126" endy="125.9842519685" width="1.9685039370079" />
+    <line layer="TOP_PLACE_BOUND" originx="314.96062992126" originy="125.9842519685" endx="314.96062992126" endy="-74.803149606298" width="1.9685039370079" />
+    <line layer="TOP_PLACE_BOUND" originx="314.96062992126" originy="-74.803149606298" endx="-114.17322834646" endy="-74.803149606298" width="1.9685039370079" />
+    <line layer="TOP_PLACE_BOUND" originx="-114.17322834646" originy="-74.803149606298" endx="-114.17322834646" endy="125.9842519685" width="1.9685039370079" />
+    <line layer="TOP_ASSEMBLY" originx="-104.33070866142" originy="116.14173228346" endx="305.11811023622" endy="116.14173228346" width="3.9370078740157" />
+    <line layer="TOP_ASSEMBLY" originx="305.11811023622" originy="116.14173228346" endx="305.11811023622" endy="-64.960629921259" width="3.9370078740157" />
+    <line layer="TOP_ASSEMBLY" originx="305.11811023622" originy="-64.960629921259" endx="-104.33070866142" endy="-64.960629921259" width="3.9370078740157" />
+    <line layer="TOP_ASSEMBLY" originx="-104.33070866142" originy="-64.960629921259" endx="-104.33070866142" endy="116.14173228346" width="3.9370078740157" />
+    <line layer="TOP_ASSEMBLY" originx="-104.33070866142" originy="65.944881889763" endx="-54.133858267716" endy="116.14173228346" width="3.9370078740157" />
+    <line layer="TOP_SILKSCREEN" originx="305.11811023622" originy="-64.960629921259" endx="305.11811023622" endy="116.14173228346" width="7.8740157480314" />
+    <line layer="TOP_SILKSCREEN" originx="305.11811023622" originy="116.14173228346" endx="-104.33070866142" endy="116.14173228346" width="7.8740157480314" />
+    <line layer="TOP_SILKSCREEN" originx="-104.33070866142" originy="116.14173228346" endx="-104.33070866142" endy="0" width="7.8740157480314" />
+  </footprint>
+  <symbol name="BTA16-600BWRG" originx="0" originy="0">
+    <line originx="350" originy="0" endx="350" endy="-100" width="0" />
+    <line originx="250" originy="0" endx="250" endy="100" width="0" />
+    <line originx="350" originy="0" endx="500" endy="0" width="0" />
+    <line originx="250" originy="0" endx="100" endy="0" width="0" />
+    <line originx="350" originy="-50" endx="500" endy="-150" width="0" />
+    <arc originx="300" originy="0" startangle="180" sweepangle="180" radius="180" width="0" />
+    <arc originx="300" originy="0" startangle="180" sweepangle="-180" radius="180" width="0" />
+    <sympin number="1" originx="500" originy="0" rotation="0" length="100" width="7.8740157480315" flipped="False">
+      <text name="pinname" originx="600" originy="-20" style="Default" rotation="0" justify="upperright" flipped="False" hidden="True" data="A1" />
+      <text name="pindes" originx="500" originy="10" style="Default" rotation="0" justify="lowerleft" flipped="False" hidden="False" data="1" />
+    </sympin>
+    <sympin number="2" originx="100" originy="0" rotation="180" length="100" width="7.8740157480315" flipped="False">
+      <text name="pinname" originx="0" originy="-20" style="Default" rotation="0" justify="upperleft" flipped="False" hidden="True" data="A2" />
+      <text name="pindes" originx="110" originy="10" style="Default" rotation="0" justify="lowerright" flipped="False" hidden="False" data="2" />
+    </sympin>
+    <sympin number="3" originx="500" originy="-150" rotation="270" length="100" width="7.8740157480315" flipped="False">
+      <text name="pinname" originx="520" originy="-250" style="Default" rotation="90" justify="lowerleft" flipped="False" hidden="True" data="G" />
+      <text name="pindes" originx="490" originy="-250" style="Default" rotation="90" justify="lowerright" flipped="False" hidden="False" data="3" />
+    </sympin>
+    <polygon type="polygon">
+      <point x="350" y="100" />
+      <point x="350" y="0" />
+      <point x="250" y="50" />
+    </polygon>
+    <polygon type="polygon">
+      <point x="250" y="-100" />
+      <point x="250" y="0" />
+      <point x="350" y="-50" />
+    </polygon>
+  </symbol>
+  <component name="BTA16-600BWRG" designatorprefix="Q" height="181.10236220472" footprint="TO255P460X1020X2005-3P">
+    <comppin designator="1" sympin="1" pinswap="0" gateswap="0" gate="1" group="1" side="" type="Any" name="A1" />
+    <comppin designator="2" sympin="2" pinswap="0" gateswap="0" gate="1" group="1" side="" type="Any" name="A2" />
+    <comppin designator="3" sympin="3" pinswap="0" gateswap="0" gate="1" group="1" side="" type="Any" name="G" />
+    <attached_symbol gate="1" name="BTA16-600BWRG" />
+    <pinmap designator="1" footprintpin="1" />
+    <pinmap designator="2" footprintpin="2" />
+    <pinmap designator="3" footprintpin="3" />
+    <text name="Datasheet" originx="0" originy="0" style="Default" rotation="0" justify="" flipped="False" hidden="True" data="https://www.st.com/resource/en/datasheet/t1610.pdf" />
+    <text name="Description" originx="0" originy="0" style="Default" rotation="0" justify="" flipped="False" hidden="True" data="TRIAC BTA16-600BWRG, 600V, Gate Trigger 1.3V 50mA, TO-220AB Insulated 3-Pin" />
+    <text name="Mouser Part Number" originx="0" originy="0" style="Default" rotation="0" justify="" flipped="False" hidden="True" data="511-BTA16-600BW" />
+    <text name="Mouser Price/Stock" originx="0" originy="0" style="Default" rotation="0" justify="" flipped="False" hidden="True" data="https://www.mouser.co.uk/ProductDetail/STMicroelectronics/BTA16-600BWRG?qs=%2Fa2FmOVcLL%252Bg0jsDx0ejhQ%3D%3D" />
+    <text name="Manufacturer_Name" originx="0" originy="0" style="Default" rotation="0" justify="" flipped="False" hidden="True" data="STMicroelectronics" />
+    <text name="Manufacturer_Part_Number" originx="550" originy="-200" style="Default" rotation="0" justify="left" flipped="False" hidden="False" data="BTA16-600BWRG" />
+  </component>
+</quadcept_library>

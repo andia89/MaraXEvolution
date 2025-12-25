@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART '1_2199298_1'
+CLASS = IO
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "TE Connectivity", "1-2199298-1" (!) = "", "DIPS762W70P254L762H510Q6N", "Dual-In-Line Sockets", "571-1-2199298-1", "https://www.mouser.co.uk/ProductDetail/TE-Connectivity/1-2199298-1?qs=fK8dlpkaUMsQ%252BTzExsKLsw%3D%3D", "TE CONNECTIVITY - 1-2199298-1 - IC SOCKET, DIP, 6POS, TH", "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Customer+Drawing%7F2199298%7FA%7Fpdf%7FEnglish%7FENG_CD_2199298_A_baseFilename.pdf%7F1-2199298-1", "5.1 mm"
+END_PART
+
+END.

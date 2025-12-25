@@ -1,0 +1,286 @@
+(footprint "IE0925031"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "IE092503-1-1")
+	(tags "Undefined or Miscellaneous")
+	(property "Reference" "REF**"
+		(at 0 -2.5 0)
+		(layer "F.SilkS")
+		(uuid "ec46d0b7-7ea1-4040-8e16-1e7d2ffbe60a")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Value" "IE092503-1"
+		(at 0 -2.5 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "30b82db6-85c0-41b2-80d5-9204ed1bd40f")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Datasheet" "https://www.mouser.cn/datasheet/2/683/IE092503-1-358381.pdf"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9a5d1912-d6c1-4a53-b850-1876237796cd")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "Audio Indicators & Alerts Electro-Mechanical Indicator"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "d593c8c2-2a2c-43fe-a88a-59f32d70be3e")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Height" "5"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "bbfe1c6e-2e9a-43cc-a295-004931fe05cc")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Mouser Part Number" "497-IE092503-1"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ad32db56-c017-477b-9b73-8b7b96e99a22")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/DB-Unlimited/IE092503-1?qs=t9M3m0YJX4OMgcFlTn3Auw%3D%3D"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "a079da6c-1dc7-420d-b9f7-d8cd3f913b01")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer_Name" "DB Unlimited"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "1fe6c13d-67b6-4514-be6d-9fd925fa2527")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer_Part_Number" "IE092503-1"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "9ca475b0-ce76-4141-8bf6-c6e54acf5cbd")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_line
+		(start -4.8 -2.5)
+		(end -4.8 -2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "00aadae0-044b-41aa-bfdc-72ea75c75474")
+	)
+	(fp_line
+		(start 4.8 -2.5)
+		(end 4.8 -2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "0e78b428-d71d-4127-b332-98e4982f3572")
+	)
+	(fp_arc
+		(start -4.8 -2.5)
+		(mid 0 -7.3)
+		(end 4.8 -2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "0564dcb1-e9ae-4813-93fa-fd7267514a62")
+	)
+	(fp_arc
+		(start 4.8 -2.5)
+		(mid 0 2.3)
+		(end -4.8 -2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "6634a553-53a3-4eb0-8402-f6e66e3b9471")
+	)
+	(fp_line
+		(start -5.4 -2.5)
+		(end -5.4 -2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "0f8a784e-22fe-4b01-bfc5-0b7bf2b3e4bd")
+	)
+	(fp_line
+		(start 5.4 -2.5)
+		(end 5.4 -2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "3f7deece-b021-46b8-ae81-e1cc8ae0ff88")
+	)
+	(fp_arc
+		(start -5.4 -2.5)
+		(mid 0 -7.9)
+		(end 5.4 -2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "00281df9-7a45-4eb1-acda-ba415ae3adfd")
+	)
+	(fp_arc
+		(start 5.4 -2.5)
+		(mid 0 2.9)
+		(end -5.4 -2.5)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "d4faf1ba-9747-4024-aa06-57eef155cdcb")
+	)
+	(fp_line
+		(start -4.8 -2.5)
+		(end -4.8 -2.5)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "eea77762-68c3-4628-8294-9d2fc6ab5ebc")
+	)
+	(fp_line
+		(start 4.8 -2.5)
+		(end 4.8 -2.5)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "c84e7676-1bf2-4486-8b5e-ab2e5e0ff85d")
+	)
+	(fp_arc
+		(start -4.8 -2.5)
+		(mid 0 -7.3)
+		(end 4.8 -2.5)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "b0e41c10-3916-4d61-ba19-7c09cc60a6d1")
+	)
+	(fp_arc
+		(start 4.8 -2.5)
+		(mid 0 2.3)
+		(end -4.8 -2.5)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "0cad83c1-b77e-4665-8a1f-3bb6eeabee27")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 -2.5 0)
+		(layer "F.Fab")
+		(uuid "b38e813a-04d9-4879-b0ae-7ad715e43f0e")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 1.3 1.3)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "342a72ec-16fe-41e8-a838-eb863eb7c364")
+	)
+	(pad "2" thru_hole circle
+		(at 0 -5)
+		(size 1.3 1.3)
+		(drill 0.8)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "d016ff67-1999-4e6d-8247-0ae2aa78fb5c")
+	)
+	(embedded_fonts no)
+	(model "IE092503-1.stp"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

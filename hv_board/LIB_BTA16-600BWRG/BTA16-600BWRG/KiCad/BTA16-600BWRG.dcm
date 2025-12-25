@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP BTA16-600BWRG
+D TRIAC BTA16-600BWRG, 600V, Gate Trigger 1.3V 50mA, TO-220AB Insulated 3-Pin
+K
+F https://www.st.com/resource/en/datasheet/t1610.pdf
+$ENDCMP
+#
+#End Doc Library

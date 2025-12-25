@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART '7178DG'
+CLASS = DISCRETE
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "Aavid Thermalloy", "7178DG" (!) = "", "7178DG", "Other", "532-7178DG", "https://www.mouser.co.uk/ProductDetail/Aavid/7178DG?qs=U7T%2FEnMyvTs%252BrLPKYORuUQ%3D%3D", "Heat Sinks Channel Style Stamped Heatsink with Single Narrow/Integrated Clip for TO-220, Copper, Vertical Mounting, 35.7 n Thermal Resistance, 2.54mm Hole", "https://4donline.ihs.com/images/VipMasterIC/IC/AAVT/AAVTS00133/AAVTS00064-1.pdf?hkey=CECEF36DEECDED6468708AAF2E19C0C6", "22.86 mm"
+END_PART
+
+END.

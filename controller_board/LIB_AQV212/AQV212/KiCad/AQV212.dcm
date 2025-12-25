@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP AQV212
+D Solid State Relays - PCB Mount 550MA 60V 6PIN SPST
+K
+F https://na.industrial.panasonic.com/products/relays/semiconductor-relays/photomos-relays/series/photomos-gu-1-form-dip6-pin-type/1922/model/AQV212
+$ENDCMP
+#
+#End Doc Library

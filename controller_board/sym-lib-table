@@ -1,0 +1,7 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "customLibrary")(type "KiCad")(uri "${KIPRJMOD}/customLibrary.kicad_sym")(options "")(descr ""))
+  (lib (name "projectLibrary")(type "KiCad")(uri "${KIPRJMOD}/projectLibrary.kicad_sym")(options "")(descr ""))
+  (lib (name "molex1")(type "KiCad")(uri "${KIPRJMOD}/KiCADv6/2025-11-27_13-18-43.kicad_sym")(options "")(descr ""))
+  (lib (name "molex2")(type "KiCad")(uri "${KIPRJMOD}/KiCADv6/2025-11-27_13-22-44.kicad_sym")(options "")(descr ""))
+)

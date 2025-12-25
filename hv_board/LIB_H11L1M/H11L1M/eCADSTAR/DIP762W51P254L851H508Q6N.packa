@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "H11L1M"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2019-11-12-20:49:07)
+    (mountForm default
+        (footprintRef "DIP762W51P254L851H508Q6N")
+        (spec "System")
+    )
+)

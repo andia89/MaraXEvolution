@@ -1,0 +1,70 @@
+(Japanese_coding: sjis)
+(function "ECS_179189"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2015-08-24-16:14:05)
+    (utime 2025-11-19-09:34:52)
+    (interface
+        (port "1" (symbPinId 1) (portType INOUT))
+        (port "2" (symbPinId 2) (portType INOUT))
+        (port "3" (symbPinId 3) (portType INOUT))
+    )
+    (property "symbolName" "BTA16-600BWRG")
+)
+
+
+(pinAssign "ECS_179189"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2015-08-24-16:14:05)
+    (utime 2025-11-19-09:34:52)
+    (interface
+        (port "1" (symbPinId 1) (portName "A1") (portType INOUT))
+        (port "2" (symbPinId 2) (portName "A2") (portType INOUT))
+        (port "3" (symbPinId 3) (portName "G") (portType INOUT))
+    )
+    (internal
+        (funcInst (functionRef "ECS_179189")
+                (port "1" (match "1"))
+                (port "2" (match "2"))
+                (port "3" (match "3"))
+        )
+    )
+    (property "usePowerBox" "No")
+    (property "symbolName" "BTA16-600BWRG")
+)
+
+
+(part "BTA16-600BWRG"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2015-08-24-16:14:05)
+    (utime 2025-11-19-09:34:52)
+    (packageRef "BTA16-600BWRG")
+    (pinAssignRef "ECS_179189")
+    (interface
+        (port "1" (symbPinId 1) (portName "A1") (portType INOUT))
+        (port "2" (symbPinId 2) (portName "A2") (portType INOUT))
+        (port "3" (symbPinId 3) (portName "G") (portType INOUT))
+    )
+    (partClass UNDEF)
+    (useInSchema Y)
+    (useInLayout Y)
+    (inPartsList Y)
+    (partType NORMAL)
+    (placeRestriction FREE)
+    (property "enetNonSeries" "YES")
+    (property "refDesPrefix" "Q")
+    (property "description" "TRIAC BTA16-600BWRG, 600V, Gate Trigger 1.3V 50mA, TO-220AB Insulated 3-Pin")
+    (property "Mouser_Part_Number" "511-BTA16-600BW")
+    (property "Mouser_Price/Stock" "https://www.mouser.co.uk/ProductDetail/STMicroelectronics/BTA16-600BWRG?qs=%2Fa2FmOVcLL%252Bg0jsDx0ejhQ%3D%3D")
+    (property "Manufacturer_Name" "STMicroelectronics")
+    (property "Manufacturer_Part_Number" "BTA16-600BWRG")
+    (property "Datasheet_Link" "https://www.st.com/resource/en/datasheet/t1610.pdf")
+    (property "compAreaTopHeight" 4.6)
+)
+
+

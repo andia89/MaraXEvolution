@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'H11L1M'
+CLASS = IC
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "onsemi", "H11L1M" (!) = "", "DIP762W51P254L851H508Q6N", "Dual-In-Line Packages", "512-H11L1M", "https://www.mouser.co.uk/ProductDetail/onsemi-Fairchild/H11L1M?qs=P36CEcFBmYxn5ViwkIckpw%3D%3D", "Logic compatible output sinks 16mA at 0.4Vmaximum; High data rate, 1MHz typical (NRZ); Microprocessor compatible drive; Underwriters Laboratory (UL) recognizedfile #E90700, Volume 2; Guaranteed on/off threshold hysteresis ; Wide supply voltage capability, compatible with allpopular logic systems; Free from latch up and oscilliation throughout voltageand temperature ranges.; VDE recognized  File#102497  Add option V(e.g., H11LIVM)", "https://www.onsemi.com/pub/Collateral/H11L3M-D.PDF", "5.08 mm"
+END_PART
+
+END.

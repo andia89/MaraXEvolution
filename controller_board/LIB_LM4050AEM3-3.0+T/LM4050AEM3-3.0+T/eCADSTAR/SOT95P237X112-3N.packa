@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "LM4050AEM3-3_0+T"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2020-10-14-14:11:40)
+    (mountForm default
+        (footprintRef "SOT95P237X112-3N")
+        (spec "System")
+    )
+)

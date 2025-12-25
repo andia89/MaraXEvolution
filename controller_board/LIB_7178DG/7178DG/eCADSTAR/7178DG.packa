@@ -1,0 +1,13 @@
+(unit MM)
+
+(package "7178DG"
+    (type UNDEF)
+    (uver 2)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (utime 2024-03-25-11:38:46)
+    (mountForm default
+        (footprintRef "7178DG")
+        (spec "System")
+    )
+)

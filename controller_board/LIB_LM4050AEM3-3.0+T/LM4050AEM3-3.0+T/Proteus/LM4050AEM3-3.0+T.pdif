@@ -1,0 +1,114 @@
+;Proteus Design Interchange Format
+(PDIF
+ (vendor "SamacSys Limited")
+ (version 1 0)
+ (library
+  (part "LM4050AEM3-3.0+T"
+   (description "50ppm/&deg;C (max) Temperature Coefficient Guaranteed over the -40&deg;C to +125&deg;C Temperature RangeUltra-Small 3-Pin SC70 Package0.1% (max) Initial AccuracyWide Operating Current Range: 60&micro;A to 15mALow 28&micro;VRMS Output Noise (10Hz to 10kHz)1.225V, 2.048V, 2.500V, 3.000V, 3.3V, 4.096V, and 5.000V Fixed Reverse Breakdown VoltagesNo Output Capacitors RequiredTolerates Capacitive LoadsAEC-Q100 Qualified, Refer to Ordering Information for the Specific /V Versions")
+   (family "ANA")
+   (package "SOT95P237X112-3N")
+   (attribute "Datasheet Link" "https://www.analog.com/LM4050/datasheet")
+   (attribute "Geometry.Height" "1.12mm")
+   (attribute "Mouser Part Number" "700-LM4050AEM3-3.0T")
+   (attribute "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Maxim-Integrated/LM4050AEM3-3.0%2bT?qs=GxOUx7aO6nwirvG06jDdlw%3D%3D")
+   (attribute "Manufacturer_Name" "Analog Devices")
+   (attribute "Manufacturer_Part_Number" "LM4050AEM3-3.0+T")
+   (gate
+    (symbol "LM4050AEM3-3.0+T")
+    (pin "+" 1 PS)
+    (pin "-" 2 PS)
+    (pin "N.C." 3 NC)
+   )
+  )
+  (symbol "LM4050AEM3-3.0+T"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 200 100) (pt 800 100) (pt 800 -200) (pt 200 -200) (pt 200 100) (closed))
+   )
+   (terminal
+    (body (symbol "PIN") (pt 0 0) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -100) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1000 0) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+  )
+  (symbol "PIN"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 200 0))))
+  (symbol "PINSHORT"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 100 0))))
+  (package "SOT95P237X112-3N"
+   (units MM)
+   (layer OCCA
+    (graphic
+     (stroke 0.05)
+     (path
+      (closed true)
+      (pt -1.925 1.77)
+      (pt 1.925 1.77)
+      (pt 1.925 -1.77)
+      (pt -1.925 -1.77)
+      (pt -1.925 1.77))))
+   (layer TASM
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed true)
+      (pt -0.65 1.46)
+      (pt 0.65 1.46)
+      (pt 0.65 -1.46)
+      (pt -0.65 -1.46)
+      (pt -0.65 1.46))))
+   (layer TASM
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed false)
+      (pt -0.65 0.51)
+      (pt 0.3 1.46))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed true)
+      (pt -0.075 1.46)
+      (pt 0.075 1.46)
+      (pt 0.075 -1.46)
+      (pt -0.075 -1.46)
+      (pt -0.075 1.46))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed false)
+      (pt -1.675 1.5)
+      (pt -0.425 1.5))))
+   (leg 1 (pt -1.05 0.95) (padstack 0))
+   (leg 2 (pt -1.05 -0.95) (padstack 0))
+   (leg 3 (pt 1.05 0) (padstack 0))
+   (padstack 0
+    (plated false)
+    (pad (layer TCOP) (rectf 0.6 1.25 0 0 0))
+   )
+   (model "LM4050AEM3-3.0+T.stp"
+    (euler 90 0 -90)
+    (offset 0.10999999940395355 0.029999999329447746 0.550000011920929)
+   )
+  )
+ )
+)

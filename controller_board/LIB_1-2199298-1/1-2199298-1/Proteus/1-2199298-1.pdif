@@ -1,0 +1,140 @@
+;Proteus Design Interchange Format
+(PDIF
+ (vendor "SamacSys Limited")
+ (version 1 0)
+ (library
+  (part "1-2199298-1"
+   (description "TE CONNECTIVITY - 1-2199298-1 - IC SOCKET, DIP, 6POS, TH")
+   (family "CON")
+   (package "DIPS762W70P254L762H510Q6N")
+   (attribute "Datasheet Link" "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Customer+Drawing%7F2199298%7FA%7Fpdf%7FEnglish%7FENG_CD_2199298_A_baseFilename.pdf%7F1-2199298-1")
+   (attribute "Geometry.Height" "5.1mm")
+   (attribute "Mouser Part Number" "571-1-2199298-1")
+   (attribute "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/TE-Connectivity/1-2199298-1?qs=fK8dlpkaUMsQ%252BTzExsKLsw%3D%3D")
+   (attribute "Manufacturer_Name" "TE Connectivity")
+   (attribute "Manufacturer_Part_Number" "1-2199298-1")
+   (gate
+    (symbol "1-2199298-1")
+    (pin "1" 1 PS)
+    (pin "2" 2 PS)
+    (pin "3" 3 PS)
+    (pin "6" 6 PS)
+    (pin "5" 5 PS)
+    (pin "4" 4 PS)
+   )
+  )
+  (symbol "1-2199298-1"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 200 100) (pt 600 100) (pt 600 -300) (pt 200 -300) (pt 200 100) (closed))
+   )
+   (terminal
+    (body (symbol "PIN") (pt 0 0) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -100) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -200) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 800 0) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 800 -100) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 800 -200) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+  )
+  (symbol "PIN"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 200 0))))
+  (symbol "PINSHORT"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 100 0))))
+  (package "DIPS762W70P254L762H510Q6N"
+   (units MM)
+   (layer OCCA
+    (graphic
+     (stroke 0.05)
+     (path
+      (closed true)
+      (pt -1.44 1.62)
+      (pt 9.06 1.62)
+      (pt 9.06 -6.7)
+      (pt -1.44 -6.7)
+      (pt -1.44 1.62))))
+   (layer TASM
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed true)
+      (pt -1.19 1.37)
+      (pt 8.81 1.37)
+      (pt 8.81 -6.45)
+      (pt -1.19 -6.45)
+      (pt -1.19 1.37))))
+   (layer TASM
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed false)
+      (pt -1.19 0.1)
+      (pt 0.08 1.37))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed false)
+      (pt -1.19 -6.45)
+      (pt 8.81 -6.45))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed false)
+      (pt 8.81 1.37)
+      (pt -1.19 1.37)
+      (pt -1.19 0))))
+   (leg 1 (pt 0 0) (padstack 1))
+   (leg 2 (pt 0 -2.54) (padstack 0))
+   (leg 3 (pt 0 -5.08) (padstack 0))
+   (leg 4 (pt 7.62 -5.08) (padstack 0))
+   (leg 5 (pt 7.62 -2.54) (padstack 0))
+   (leg 6 (pt 7.62 0) (padstack 0))
+   (padstack 0
+    (hole 0.95)
+    (plated true)
+    (pad (layer TCOP) (round 1.425))
+    (pad (layer INNER) (round 1.425))
+    (pad (layer BCOP) (round 1.425))
+   )
+   (padstack 1
+    (hole 0.95)
+    (plated true)
+    (pad (layer TCOP) (square 1.425))
+    (pad (layer INNER) (round 1.425))
+    (pad (layer BCOP) (square 1.425))
+   )
+   (model "1-2199298-1.stp"
+    (euler 0 0 90)
+    (offset 3.809999942779541 -2.5399999618530273 4.820000171661377)
+   )
+  )
+ )
+)

@@ -1,0 +1,312 @@
+(footprint "DIPS762W70P254L762H510Q6N"
+	(version 20241229)
+	(generator "pcbnew")
+	(generator_version "9.0")
+	(layer "F.Cu")
+	(descr "1-2199298-1-11")
+	(tags "Connector")
+	(property "Reference" "REF**"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(uuid "c8658c10-86c0-4011-aea6-44835ea6eca9")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Value" "1-2199298-1"
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(hide yes)
+		(uuid "a1d4ae68-a196-4cf5-906f-552b5af720c4")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(property "Datasheet" "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Customer+Drawing%7F2199298%7FA%7Fpdf%7FEnglish%7FENG_CD_2199298_A_baseFilename.pdf%7F1-2199298-1"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "c2e161e4-00a3-4656-88b4-bbe6f35ce6a9")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Description" "TE CONNECTIVITY - 1-2199298-1 - IC SOCKET, DIP, 6POS, TH"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "1eb326e6-f8ee-43dd-a667-034a283d037a")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Height" "5.1"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "5138c7dc-ee8e-45f2-9bdb-d2f4e93a2a6d")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Mouser Part Number" "571-1-2199298-1"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "0c9d84c0-dea8-418b-b179-f8892f66301b")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/TE-Connectivity/1-2199298-1?qs=fK8dlpkaUMsQ%252BTzExsKLsw%3D%3D"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "173d9da4-981b-4247-9b6d-bde5c4830152")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer_Name" "TE Connectivity"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "c080f45a-1f3b-4a36-a184-3a6c1e6209fd")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer_Part_Number" "1-2199298-1"
+		(at 0 0 0)
+		(unlocked yes)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "a9f75006-06b9-43eb-9353-85e038d7b977")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr through_hole)
+	(fp_line
+		(start -1.19 -1.37)
+		(end -1.19 0)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "ee849dc9-1acf-406f-8c82-f767c8e7c80a")
+	)
+	(fp_line
+		(start -1.19 6.45)
+		(end 8.81 6.45)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "b9cab2d8-0a90-4624-a4dc-2cd3feb7fb9a")
+	)
+	(fp_line
+		(start 8.81 -1.37)
+		(end -1.19 -1.37)
+		(stroke
+			(width 0.2)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "1748d1fa-45af-42cc-bed7-c86b904d02bd")
+	)
+	(fp_line
+		(start -1.44 -1.62)
+		(end 9.06 -1.62)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "b27be927-9a1f-455b-b3a9-2a7bac20eea9")
+	)
+	(fp_line
+		(start -1.44 6.7)
+		(end -1.44 -1.62)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "7a67f069-5ab1-4452-93fb-e8bf5a4be654")
+	)
+	(fp_line
+		(start 9.06 -1.62)
+		(end 9.06 6.7)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "7efff54f-abf0-49cf-8685-a242ebdd591c")
+	)
+	(fp_line
+		(start 9.06 6.7)
+		(end -1.44 6.7)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(layer "F.CrtYd")
+		(uuid "552a4225-3ca9-40ee-a7e0-f047d830c87f")
+	)
+	(fp_line
+		(start -1.19 -1.37)
+		(end 8.81 -1.37)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "a86c8adf-f48b-401a-8aa1-214febc168de")
+	)
+	(fp_line
+		(start -1.19 -0.1)
+		(end 0.08 -1.37)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "d9d46931-e900-4f89-995c-e9ac816971cc")
+	)
+	(fp_line
+		(start -1.19 6.45)
+		(end -1.19 -1.37)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "883537a4-2bcc-4d85-a4b6-ed86439c0c27")
+	)
+	(fp_line
+		(start 8.81 -1.37)
+		(end 8.81 6.45)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "8fd79b4a-253f-46a6-8440-a92b8750df3b")
+	)
+	(fp_line
+		(start 8.81 6.45)
+		(end -1.19 6.45)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "01f8d75c-4da1-4f81-bc47-af396b8a92f1")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "06cffdc7-3f58-41f3-9768-0ddf2292e638")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.254)
+			)
+		)
+	)
+	(pad "1" thru_hole rect
+		(at 0 0)
+		(size 1.425 1.425)
+		(drill 0.95)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "686d357a-6080-4714-8b9f-3c642a5a712a")
+	)
+	(pad "2" thru_hole circle
+		(at 0 2.54)
+		(size 1.425 1.425)
+		(drill 0.95)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "b4883987-8a59-439d-9612-612d499e0d2f")
+	)
+	(pad "3" thru_hole circle
+		(at 0 5.08)
+		(size 1.425 1.425)
+		(drill 0.95)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "b83a4204-039a-400e-bfa0-579f16b34cec")
+	)
+	(pad "4" thru_hole circle
+		(at 7.62 5.08)
+		(size 1.425 1.425)
+		(drill 0.95)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "86d25081-5a2f-4946-a720-bc4d8c8ac8ac")
+	)
+	(pad "5" thru_hole circle
+		(at 7.62 2.54)
+		(size 1.425 1.425)
+		(drill 0.95)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "6f2dee75-6983-44f2-b12e-684b6a5bf87b")
+	)
+	(pad "6" thru_hole circle
+		(at 7.62 0)
+		(size 1.425 1.425)
+		(drill 0.95)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "45d7a37e-a86e-4fb6-bebd-d6af6afa608c")
+	)
+	(embedded_fonts no)
+	(model "1-2199298-1.stp"
+		(offset
+			(xyz 3.809999886 -2.539999924 4.820000099)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 -90)
+		)
+	)
+)

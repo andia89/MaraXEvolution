@@ -1,0 +1,139 @@
+;Proteus Design Interchange Format
+(PDIF
+ (vendor "SamacSys Limited")
+ (version 1 0)
+ (library
+  (part "AQV212"
+   (description "Solid State Relays - PCB Mount 550MA 60V 6PIN SPST")
+   (family "ANA")
+   (package "DIP762W47P254L880H410Q6N")
+   (attribute "Datasheet Link" "https://na.industrial.panasonic.com/products/relays/semiconductor-relays/photomos-relays/series/photomos-gu-1-form-dip6-pin-type/1922/model/AQV212")
+   (attribute "Geometry.Height" "4.1mm")
+   (attribute "Mouser Part Number" "769-AQV212")
+   (attribute "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Panasonic-Industrial-Devices/AQV212?qs=mTeSeKeuVA4GB1tVP0FFxg%3D%3D")
+   (attribute "Manufacturer_Name" "Panasonic")
+   (attribute "Manufacturer_Part_Number" "AQV212")
+   (gate
+    (symbol "AQV212")
+    (pin "A" 1 PS)
+    (pin "K" 2 PS)
+    (pin "NC" 3 NC)
+    (pin "D_2" 6 PS)
+    (pin "S" 5 PS)
+    (pin "D_1" 4 PS)
+   )
+  )
+  (symbol "AQV212"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 200 100) (pt 800 100) (pt 800 -300) (pt 200 -300) (pt 200 100) (closed))
+   )
+   (terminal
+    (body (symbol "PIN") (pt 0 0) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -100) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 0 -200) (rot 0) (mir 0) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1000 0) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1000 -100) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+   (terminal
+    (body (symbol "PIN") (pt 1000 -200) (rot 0) (mir X) (visible true))
+    (name (pt 230 0) (rot 0) (just MIDDLE LEFT) (visible true))
+    (number (pt 140 20) (rot 0) (just BOTTOM RIGHT) (visible true)))
+  )
+  (symbol "PIN"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 200 0))))
+  (symbol "PINSHORT"
+   (units THOU)
+   (origin (pt 0 0))
+   (graphic
+    (stroke 10)
+    (path (pt 0 0) (pt 100 0))))
+  (package "DIP762W47P254L880H410Q6N"
+   (units MM)
+   (layer OCCA
+    (graphic
+     (stroke 0.05)
+     (path
+      (closed true)
+      (pt -4.62 4.675)
+      (pt 4.62 4.675)
+      (pt 4.62 -4.675)
+      (pt -4.62 -4.675)
+      (pt -4.62 4.675))))
+   (layer TASM
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed true)
+      (pt -3.225 4.425)
+      (pt 3.225 4.425)
+      (pt 3.225 -4.425)
+      (pt -3.225 -4.425)
+      (pt -3.225 4.425))))
+   (layer TASM
+    (graphic
+     (stroke 0.1)
+     (path
+      (closed false)
+      (pt -3.225 3.155)
+      (pt -1.955 4.425))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed false)
+      (pt -4.345 4.425)
+      (pt 3.225 4.425))))
+   (layer TSLK
+    (graphic
+     (stroke 0.2)
+     (path
+      (closed false)
+      (pt -3.225 -4.425)
+      (pt 3.225 -4.425))))
+   (leg 1 (pt -3.81 2.54) (padstack 1))
+   (leg 2 (pt -3.81 0) (padstack 0))
+   (leg 3 (pt -3.81 -2.54) (padstack 0))
+   (leg 4 (pt 3.81 -2.54) (padstack 0))
+   (leg 5 (pt 3.81 0) (padstack 0))
+   (leg 6 (pt 3.81 2.54) (padstack 0))
+   (padstack 0
+    (hole 0.67)
+    (plated true)
+    (pad (layer TCOP) (round 1.07))
+    (pad (layer INNER) (round 1.07))
+    (pad (layer BCOP) (round 1.07))
+   )
+   (padstack 1
+    (hole 0.67)
+    (plated true)
+    (pad (layer TCOP) (square 1.07))
+    (pad (layer INNER) (round 1.07))
+    (pad (layer BCOP) (square 1.07))
+   )
+   (model "AQV212.stp"
+    (euler 0 0 0)
+    (offset 0 0 0)
+   )
+  )
+ )
+)

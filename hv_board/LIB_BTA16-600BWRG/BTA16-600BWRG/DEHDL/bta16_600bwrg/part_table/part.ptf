@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'BTA16_600BWRG'
+CLASS = DISCRETE
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "STMicroelectronics", "BTA16-600BWRG" (!) = "", "TO255P460X1020X2005-3P", "Transistor Outline, Vertical", "511-BTA16-600BW", "https://www.mouser.co.uk/ProductDetail/STMicroelectronics/BTA16-600BWRG?qs=%2Fa2FmOVcLL%252Bg0jsDx0ejhQ%3D%3D", "TRIAC BTA16-600BWRG, 600V, Gate Trigger 1.3V 50mA, TO-220AB Insulated 3-Pin", "https://www.st.com/resource/en/datasheet/t1610.pdf", "4.6 mm"
+END_PART
+
+END.

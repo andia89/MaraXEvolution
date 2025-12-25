@@ -1,0 +1,11 @@
+FILE_TYPE = MULTI_PHYS_TABLE;
+
+PART 'IE092503_1'
+CLASS = DISCRETE
+{========================================================================================}
+:"MANUFACTURER_NAME", "MANUFACTURER_PART_NUMBER"= "PART_NUMBER", "JEDEC_TYPE", "PACK_TYPE", "MOUSER_PART_NUMBER", "MOUSER_PRICE/STOCK", "DESCRIPTION", "DATASHEET", "HEIGHT";
+{========================================================================================}
+ "DB Unlimited", "IE092503-1" (!) = "", "IE0925031", "Other", "497-IE092503-1", "https://www.mouser.co.uk/ProductDetail/DB-Unlimited/IE092503-1?qs=t9M3m0YJX4OMgcFlTn3Auw%3D%3D", "Audio Indicators & Alerts Electro-Mechanical Indicator", "https://www.mouser.cn/datasheet/2/683/IE092503-1-358381.pdf", "5 mm"
+END_PART
+
+END.

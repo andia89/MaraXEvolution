@@ -1,0 +1,62 @@
+(Japanese_coding: sjis)
+(function "ECS_4674774"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2024-03-25-11:38:46)
+    (utime 2024-03-25-11:38:46)
+    (interface
+        (port "1" (symbPinId 1) (portType INOUT))
+    )
+    (property "symbolName" "7178DG")
+)
+
+
+(pinAssign "ECS_4674774"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2024-03-25-11:38:46)
+    (utime 2024-03-25-11:38:46)
+    (interface
+        (port "1" (symbPinId 1) (portName "1") (portType INOUT))
+    )
+    (internal
+        (funcInst (functionRef "ECS_4674774")
+                (port "1" (match "1"))
+        )
+    )
+    (property "usePowerBox" "No")
+    (property "symbolName" "7178DG")
+)
+
+
+(part "7178DG"
+    (uver 1)
+    (cuser "SamacSys")
+    (uuser "SamacSys")
+    (ctime 2024-03-25-11:38:46)
+    (utime 2024-03-25-11:38:46)
+    (packageRef "7178DG")
+    (pinAssignRef "ECS_4674774")
+    (interface
+        (port "1" (symbPinId 1) (portName "1") (portType INOUT))
+    )
+    (partClass UNDEF)
+    (useInSchema Y)
+    (useInLayout Y)
+    (inPartsList Y)
+    (partType NORMAL)
+    (placeRestriction FREE)
+    (property "enetNonSeries" "YES")
+    (property "refDesPrefix" "H")
+    (property "description" "Heat Sinks Channel Style Stamped Heatsink with Single Narrow/Integrated Clip for TO-220, Copper, Vertical Mounting, 35.7 n Thermal Resistance, 2.54mm Hole")
+    (property "Mouser_Part_Number" "532-7178DG")
+    (property "Mouser_Price/Stock" "https://www.mouser.co.uk/ProductDetail/Aavid/7178DG?qs=U7T%2FEnMyvTs%252BrLPKYORuUQ%3D%3D")
+    (property "Manufacturer_Name" "Aavid Thermalloy")
+    (property "Manufacturer_Part_Number" "7178DG")
+    (property "Datasheet_Link" "https://4donline.ihs.com/images/VipMasterIC/IC/AAVT/AAVTS00133/AAVTS00064-1.pdf?hkey=CECEF36DEECDED6468708AAF2E19C0C6")
+    (property "compAreaTopHeight" 22.86)
+)
+
+

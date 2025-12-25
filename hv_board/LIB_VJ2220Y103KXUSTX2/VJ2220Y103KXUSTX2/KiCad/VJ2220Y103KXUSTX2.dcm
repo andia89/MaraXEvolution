@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP VJ2220Y103KXUSTX2
+D Capacitor MLCC 2220 250Vac X2 10nF Vishay 10nF Multilayer Ceramic Capacitor (MLCC) 250 V ac +/-10% X7R dielectric VJ Surface Mount max op. temp. +125C
+K
+F https://datasheet.datasheetarchive.com/originals/distributors/Datasheets-DGA9/2510523.pdf
+$ENDCMP
+#
+#End Doc Library
