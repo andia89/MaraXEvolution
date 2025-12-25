@@ -1,3 +1,6 @@
+## Options for upgrades
+This controller board and HV board is designed to replace the existing controller board of the Mara X. By using only the hardware and software as in this repository the coffee machine gains potentially many new features, like MQTT support, improved temperature stability a cleaning mode and many more things. However, this project is much more powerful when combined with https://github.com/andia89/MaraXEvolution-HMI and https://github.com/andia89/MaraXEvolution-Scale as well as a pressure transducer upgrade as described in the [Assembly instructions](#assembly-instructions). 
+
 ## Firmware setup
 
 ## Parts list
@@ -5,6 +8,7 @@
 ## Assembly instructions
 
 ## Support me
+
 
 ## Disclaimer & Safety Warning
 
