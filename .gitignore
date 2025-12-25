@@ -1,0 +1,7 @@
+.pio
+.vscode/.browserslist
+.DS_Store
+*.pyc
+randomStuff
+*-backups
+*.lck
