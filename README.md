@@ -15,6 +15,10 @@ This repository contains the hardware design and firmware for the **MaraX Evolut
 * `controller_board/`: KiCad v6 hardware design files (schematics, PCB layout, and fabrication files).
 * `firmware/`: PlatformIO project source code for the ESP32-based controller.
 
+## Parts list
+ * PCB for controller board and HV board (use the .bom and .cpl file if you want to use STM service from JLCPCB for the small resistors/capacitors and Transistors/Diodes). Otherwise use suitable 0850 parts and Transistors and Diodes as described in the kicad files. **R4**, **R12**, **R13** and **R2** I suggest to use lower tolerance (e.g. 0.1%) 0850 resistors since they need to be fairly accurate as they are used for voltage divider. As such they are not included in the BOM and CPL file for JLCPCB.
+ * Electronic components (these are the components that are not done by the SMT service of JLCPCB and need to be handsoldered)
+
 ## Hardware Assembly
 
 1.  **PCB Fabrication:** Use the Gerber and Drill files provided in `controller_board/jlcpcb/production_files/` to order the PCB.
