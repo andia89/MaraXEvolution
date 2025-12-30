@@ -53,7 +53,7 @@ This firmware relies on the following libraries (automatically handled by Platfo
 The BOM for the controller board is divided into **SMD components** (suitable for JLCPCB's SMT service) and **Handsolder components** (precision parts, connectors, and the microcontroller to be sourced from Mouser/DigiKey).
 
 #### 1. SMD Components (JLCPCB SMT Service)
-These components have LCSC part numbers included in the BOM and can be assembled by the JLCPCB SMT service.
+These components have LCSC part numbers included in the BOM and can be assembled by the JLCPCB SMT service. Alternatively they can be of course hand soldered. These Resistors and Capacitors are mainly used for Pull-up/down, current limiting and filtering, as such their exact values are not that important. The transistors are mainly used for switching LEDs
 
 | Comment | Designator | Footprint | LCSC Part | Qty |
 | :--- | :--- | :--- | :--- | :--- |
@@ -77,7 +77,7 @@ These components have LCSC part numbers included in the BOM and can be assembled
 These parts are not included in the SMT assembly and must be purchased separately.
 
 **Precision Resistors**
-*0.1% tolerance is recommended for these voltage dividers.*
+*0.1% tolerance is recommended for these voltage dividers. If this is really necessary I am not sure, but I used 0.1% tolerance ones and it works great*
 
 | Value | Designator | Qty | Link (Mouser) |
 | :--- | :--- | :--- | :--- |
@@ -93,7 +93,7 @@ These parts are not included in the SMT assembly and must be purchased separatel
 | **Arduino Nano ESP32**| A1 | Microcontroller | 1 | [Arduino Nano ESP32](https://www.mouser.com/c/?q=Arduino%20Nano%20ESP32) |
 | **ADS1115IDGS** | U1 | 16-Bit ADC | 1 | [ADS1115IDGS](https://www.mouser.com/c/?q=ADS1115IDGS) |
 | **AQV212** | IC1 | PhotoMOS Relay | 1 | [AQV212](https://www.mouser.com/c/?q=AQV212) |
-| **IE092503-1** | U3 | DC-DC Converter | 1 | [IE092503-1](https://www.mouser.com/c/?q=IE092503-1) |
+| **IE092503-1** | U3 | Buzzer | 1 | [IE092503-1](https://www.mouser.com/c/?q=IE092503-1) |
 | **LM4050AEM3-3.0** | IC2 | Voltage Reference 3.0V | 1 | [LM4050AEM3-3.0](https://www.mouser.com/c/?q=LM4050AEM3-3.0) |
 
 **Connectors**
@@ -102,7 +102,7 @@ These parts are not included in the SMT assembly and must be purchased separatel
 | :--- | :--- | :--- | :--- | :--- |
 | **280377-2** | CN1, CN2, CN3, CN4, CN5, CN7 | TE Ampmodu II (2 pos) | 6 | [TE 280377-2](https://www.mouser.com/c/?q=280377-2) |
 | **280389-2** | CN6 | TE Ampmodu II (2 pos) | 1 | [TE 280389-2](https://www.mouser.com/c/?q=280389-2) |
-| **70553-0002** | J4 | Molex SL Header (3 pos)<br>*(Optional: If Pressure Transducer is installed)* | 1 | [Molex 70553-0002](https://www.mouser.com/c/?q=705530002) |
+| **70553-0002** | J4 | Molex SL Header (3 pos)<br>*(Optional: Can be omitted if no pressure transducer is to be installed)* | 1 | [Molex 70553-0002](https://www.mouser.com/c/?q=705530002) |
 | **70553-0041** | J5 | Molex SL Header (7 pos) | 1 | [Molex 70553-0041](https://www.mouser.com/c/?q=705530041) |
 | **Pin Header 1x06** | J2 | 2.00mm Pitch Header | 1 | [Header 1x06 2mm](https://www.mouser.com/c/?q=Pin%20Header%201x06%202.00mm) |
 
@@ -112,6 +112,63 @@ This component is obsolete or hard to find and typically requires sourcing from 
 | Component | Designator | Note | Link |
 | :--- | :--- | :--- | :--- |
 | **LM1830N** | U2 | Fluid Level Detector | [Search on eBay](https://www.ebay.com/sch/i.html?_nkw=LM1830N) |
+
+### HV Board
+
+These components have LCSC part numbers included in the BOM and can be assembled by the JLCPCB SMT service. Alternatively they can be of course hand soldered. These Resistors and Capacitors are mainly used for Pull-up/down, current limiting and filtering, as such their exact values are not that important. Transistors are used to switch the Relays and Diodes as flyback. Both can be cheaply done with SMT service from JLCPCB
+
+#### 1. SMD Components (JLCPCB SMT Service)
+These components have LCSC part numbers and can be assembled by the JLCPCB SMT service.
+
+| Comment | Designator | Footprint | LCSC Part | Qty |
+| :--- | :--- | :--- | :--- | :--- |
+| **100** | R8 | R 0805 | [C17408](https://lcsc.com/product-detail/C17408.html) | 1 |
+| **10K** | R1, R28 | R 0805 | [C17414](https://lcsc.com/product-detail/C17414.html) | 2 |
+| **1k** | R7 | R 0805 | [C17513](https://lcsc.com/product-detail/C17513.html) | 1 |
+| **BAT46WJ** <br>*(I would have liked the BAT46WJ but only the BAT46WS is available for SMT service. It is also fine)* | U3, U4 | SC-90 / SOD323F | [C7502692](https://lcsc.com/product-detail/C7502692.html) | 2 |
+| **BSS138** | Q1, Q2 | SOT-23 | [C7420339](https://lcsc.com/product-detail/C7420339.html) | 2 |
+
+#### 2. Handsolder Components (Mouser / DigiKey)
+These parts involve mains voltage or high power and must be sourced separately.
+
+**High Power Resistors (2010 Package)**
+*Note: These require the larger 2010 [5025 metric] footprint for power handling. Go for Power rating of >1W for those*
+
+| Value | Designator | Qty | Link (Mouser) |
+| :--- | :--- | :--- | :--- |
+| **47k** | R5, R6 | 2 | [2010 Resistor 47k](https://www.mouser.com/c/?q=2010%20resistor%2047k) |
+| **330** | R9 | 1 | [2010 Resistor 330](https://www.mouser.com/c/?q=2010%20resistor%20330) |
+| **39** | R11 | 1 | [2010 Resistor 39](https://www.mouser.com/c/?q=2010%20resistor%2039) |
+
+**Relays, Triacs & Power Modules**
+
+| Part Name | Designator | Description | Qty | Link (Mouser) |
+| :--- | :--- | :--- | :--- | :--- |
+| **ECE10US12** | U1 | AC-DC Converter 12V | 1 | [ECE10US12](https://www.mouser.com/c/?q=ECE10US12) |
+| **ALDP112** | U2 | Panasonic Relay 12V | 1 | [ALDP112](https://www.mouser.com/c/?q=ALDP112) |
+| **RT314A12** | K1 | TE Schrack Relay 12V | 1 | [RT314A12](https://www.mouser.com/c/?q=RT314A12) |
+| **BTA16-600BWRG**| Q3 | Triac 600V 16A | 1 | [BTA16-600BWRG](https://www.mouser.com/c/?q=BTA16-600BWRG) |
+| **H11L1** | U5 | Optocoupler (Logic) | 1 | [H11L1](https://www.mouser.com/c/?q=H11L1) |
+| **MOC3021M** | U7 | Optocoupler (Triac) | 1 | [MOC3021M](https://www.mouser.com/c/?q=MOC3021M) |
+| **W04G** | D1 | Bridge Rectifier | 1 | [W04G](https://www.mouser.com/c/?q=W04G) |
+| **7178DG** | H1 | Heatsink for Triac | 1 | [7178DG](https://www.mouser.com/c/?q=7178DG) |
+
+**Capacitors & Fuses**
+
+| Part Name | Designator | Description | Qty | Link (Mouser) |
+| :--- | :--- | :--- | :--- | :--- |
+| **VJ2220Y103K...**| C1 | 2220 Safety Cap X2 | 1 | [VJ2220Y103KXUSTX2](https://www.mouser.com/c/?q=VJ2220Y103KXUSTX2) |
+| **100uF** | C3 | Radial (D6.3mm P2.5mm) | 1 | [100uF Radial 6.3mm 2.5mm](https://www.mouser.com/c/?q=100uF%20radial%206.3mm%202.5mm%20pitch) |
+| **0034.6808** | F1 | Schurter MSS Fuse | 1 | [0034.6808](https://www.mouser.com/c/?q=0034.6808) |
+| **0697H9100-02** | F2 | Bel Fuse Radial | 1 | [0697H9100-02](https://www.mouser.com/c/?q=0697H9100-02) |
+| **3413.0215.22** | F4 | Schurter SMD Fuse | 1 | [3413.0215.22](https://www.mouser.com/c/?q=3413.0215.22) |
+
+**Connectors**
+
+| Name | Designator | Description | Qty | Link |
+| :--- | :--- | :--- | :--- | :--- |
+| **Faston Tabs** | FA1, FA4, FA7, FA10, FA11 | PCB Tab 6.35mm | 5 | [571-160650-2](https://www.mouser.at/ProductDetail/571-160650-2) |
+| **Header 1x06** | J6 | 2.00mm Pitch Header | 1 | [Header 1x06 2mm](https://www.mouser.com/c/?q=Pin%20Header%201x06%202.00mm) |
 
 ## Assembly instructions
 
