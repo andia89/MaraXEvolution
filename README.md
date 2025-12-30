@@ -46,7 +46,72 @@ This firmware relies on the following libraries (automatically handled by Platfo
 
 ## Firmware setup
 
-## Parts list
+## Parts List
+
+### Controller Board
+
+The BOM for the controller board is divided into **SMD components** (suitable for JLCPCB's SMT service) and **Handsolder components** (precision parts, connectors, and the microcontroller to be sourced from Mouser/DigiKey).
+
+#### 1. SMD Components (JLCPCB SMT Service)
+These components have LCSC part numbers included in the BOM and can be assembled by the JLCPCB SMT service.
+
+| Comment | Designator | Footprint | LCSC Part | Qty |
+| :--- | :--- | :--- | :--- | :--- |
+| **0** | R15 | R 0805 | [C17477](https://lcsc.com/product-detail/C17477.html) | 1 |
+| **0.05uF** | C6 | C 0805 | [C53134](https://lcsc.com/product-detail/C53134.html) | 1 |
+| **0.22u** | C3 | C 0805 | [C5378](https://lcsc.com/product-detail/C5378.html) | 1 |
+| **100nF** | C7, C8, C9, C11 | C 0805 | [C28233](https://lcsc.com/product-detail/C28233.html) | 4 |
+| **1nF** | C4 | C 0805 | [C46653](https://lcsc.com/product-detail/C46653.html) | 1 |
+| **1uF** | C1, C2, C5, C10 | C 0805 | [C28323](https://lcsc.com/product-detail/C28323.html) | 4 |
+| **10K** | R1, R3, R5, R7, R9, R10, **R13**, R18, R20, R22, R24, R28, R30, R31, R32, R33, R35, R38 | R 0805 | [C17414](https://lcsc.com/product-detail/C17414.html) | 18 |
+| **20uF** | C13 | C 0805 | [C45783](https://lcsc.com/product-detail/C45783.html) | 1 |
+| **47uF** | C12 | C 0805 | [C28323](https://lcsc.com/product-detail/C28323.html) | 1 |
+| **220** | R23, R25, R26, R34, R36, R39 | R 0805 | [C17557](https://lcsc.com/product-detail/C17557.html) | 6 |
+| **300** | R8 | R 0805 | [C17617](https://lcsc.com/product-detail/C17617.html) | 1 |
+| **30K** | R17, R19, R21 | R 0805 | [C17621](https://lcsc.com/product-detail/C17621.html) | 3 |
+| **470** | R14, R27, R37, R40 | R 0805 | [C17710](https://lcsc.com/product-detail/C17710.html) | 4 |
+| **47K** | R6, R29 | R 0805 | [C17713](https://lcsc.com/product-detail/C17713.html) | 2 |
+| **BSS138** | Q1, Q2, Q3, Q4, Q5, Q6 | SOT-23 | [C15277](https://lcsc.com/product-detail/C15277.html) | 6 |
+
+#### 2. Handsolder Components (Mouser / DigiKey)
+These parts are not included in the SMT assembly and must be purchased separately.
+
+**Precision Resistors**
+*0.1% tolerance is recommended for these voltage dividers.*
+
+| Value | Designator | Qty | Link (Mouser) |
+| :--- | :--- | :--- | :--- |
+| **1K5** | R12 | 1 | [0805 1.5K 0.1%](https://www.mouser.com/c/passive-components/resistors/film-resistors/thick-film-resistors/smd-resistors-chip-resistors/?q=0805%20resistor%201.5k%200.1%25) |
+| **5K6** | R11 | 1 | [0805 5.6K](https://www.mouser.com/c/passive-components/resistors/film-resistors/thick-film-resistors/smd-resistors-chip-resistors/?q=0805%20resistor%205.6k) |
+| **10K** | R2, R4 | 2 | [0805 10K 0.1%](https://www.mouser.com/c/passive-components/resistors/film-resistors/thick-film-resistors/smd-resistors-chip-resistors/?q=0805%20resistor%2010k%200.1%25) |
+| **-** | **R16** | **0** | **DNP (Do Not Populate)** |
+
+**ICs & Modules**
+
+| Part Name | Designator | Description | Qty | Link (Mouser) |
+| :--- | :--- | :--- | :--- | :--- |
+| **Arduino Nano ESP32**| A1 | Microcontroller | 1 | [Arduino Nano ESP32](https://www.mouser.com/c/?q=Arduino%20Nano%20ESP32) |
+| **ADS1115IDGS** | U1 | 16-Bit ADC | 1 | [ADS1115IDGS](https://www.mouser.com/c/?q=ADS1115IDGS) |
+| **AQV212** | IC1 | PhotoMOS Relay | 1 | [AQV212](https://www.mouser.com/c/?q=AQV212) |
+| **IE092503-1** | U3 | DC-DC Converter | 1 | [IE092503-1](https://www.mouser.com/c/?q=IE092503-1) |
+| **LM4050AEM3-3.0** | IC2 | Voltage Reference 3.0V | 1 | [LM4050AEM3-3.0](https://www.mouser.com/c/?q=LM4050AEM3-3.0) |
+
+**Connectors**
+
+| Part Name | Designator | Description | Qty | Link (Mouser) |
+| :--- | :--- | :--- | :--- | :--- |
+| **280377-2** | CN1, CN2, CN3, CN4, CN5, CN7 | TE Ampmodu II (2 pos) | 6 | [TE 280377-2](https://www.mouser.com/c/?q=280377-2) |
+| **280389-2** | CN6 | TE Ampmodu II (2 pos) | 1 | [TE 280389-2](https://www.mouser.com/c/?q=280389-2) |
+| **70553-0002** | J4 | Molex SL Header (3 pos) | 1 | [Molex 70553-0002](https://www.mouser.com/c/?q=705530002) |
+| **70553-0041** | J5 | Molex SL Header (7 pos) | 1 | [Molex 70553-0041](https://www.mouser.com/c/?q=705530041) |
+| **Pin Header 1x06** | J2 | 2.00mm Pitch Header | 1 | [Header 1x06 2mm](https://www.mouser.com/c/?q=Pin%20Header%201x06%202.00mm) |
+
+#### 3. Special Components
+This component is obsolete or hard to find and typically requires sourcing from eBay.
+
+| Component | Designator | Note | Link |
+| :--- | :--- | :--- | :--- |
+| **LM1830N** | U2 | Fluid Level Detector | [Search on eBay](https://www.ebay.com/sch/i.html?_nkw=LM1830N) |
 
 ## Assembly instructions
 
