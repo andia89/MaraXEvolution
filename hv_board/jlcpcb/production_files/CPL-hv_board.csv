@@ -22,7 +22,7 @@ R28,10K,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,128.0,-57.0,0.0,top
 R5,47k,R_2010_5025Metric_Pad1.40x2.65mm_HandSolder,179.045,-65.9,90.0,top
 R6,47k,R_2010_5025Metric_Pad1.40x2.65mm_HandSolder,179.0,-78.4,90.0,top
 R7,1k,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,156.0,-93.5,180.0,top
-R8,86.6,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,132.6,-61.4,90.0,top
+R8,100,R_0805_2012Metric_Pad1.20x1.40mm_HandSolder,132.6,-61.4,90.0,top
 R9,330,R_2010_5025Metric_Pad1.40x2.65mm_HandSolder,177.2,-57.6,-90.0,top
 U1,ECE10US12,RELAY4_ECE10_XPR,150.865,-72.5,90.0,top
 U2,ALDP112,PAN_ALD_PAN,133.9995,-78.0508,180.0,top

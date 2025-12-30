@@ -6270,7 +6270,7 @@
 				)
 			)
 		)
-		(property "Value" "86.6"
+		(property "Value" "100"
 			(at 246.38 133.35 90)
 			(effects
 				(font
