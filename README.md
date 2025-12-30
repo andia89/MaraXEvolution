@@ -81,9 +81,9 @@ These parts are not included in the SMT assembly and must be purchased separatel
 
 | Value | Designator | Qty | Link (Mouser) |
 | :--- | :--- | :--- | :--- |
-| **1K5** | R12 | 1 | [0805 1.5K 0.1%](https://www.mouser.com/c/passive-components/resistors/film-resistors/thick-film-resistors/smd-resistors-chip-resistors/?q=0805%20resistor%201.5k%200.1%25) |
-| **5K6** | R11 | 1 | [0805 5.6K](https://www.mouser.com/c/passive-components/resistors/film-resistors/thick-film-resistors/smd-resistors-chip-resistors/?q=0805%20resistor%205.6k) |
-| **10K** | R2, R4 | 2 | [0805 10K 0.1%](https://www.mouser.com/c/passive-components/resistors/film-resistors/thick-film-resistors/smd-resistors-chip-resistors/?q=0805%20resistor%2010k%200.1%25) |
+| **1K5** | R12 | 1 | [0805 1.5K 0.1%](https://www.mouser.com/c/?q=0805%20resistor%201.5kOhms%200.1%25) |
+| **5K6** | R11 | 1 | [0805 5.6K](https://www.mouser.com/c/?q=0805%20resistor%205.6kOhms) |
+| **10K** | R2, R4 | 2 | [0805 10K 0.1%](https://www.mouser.com/c/?q=0805%20resistor%2010kOhms) |
 | **-** | **R16** | **0** | **DNP (Do Not Populate)** |
 
 **ICs & Modules**
@@ -102,7 +102,7 @@ These parts are not included in the SMT assembly and must be purchased separatel
 | :--- | :--- | :--- | :--- | :--- |
 | **280377-2** | CN1, CN2, CN3, CN4, CN5, CN7 | TE Ampmodu II (2 pos) | 6 | [TE 280377-2](https://www.mouser.com/c/?q=280377-2) |
 | **280389-2** | CN6 | TE Ampmodu II (2 pos) | 1 | [TE 280389-2](https://www.mouser.com/c/?q=280389-2) |
-| **70553-0002** | J4 | Molex SL Header (3 pos) | 1 | [Molex 70553-0002](https://www.mouser.com/c/?q=705530002) |
+| **70553-0002** | J4 | Molex SL Header (3 pos)<br>*(Optional: If Pressure Transducer is installed)* | 1 | [Molex 70553-0002](https://www.mouser.com/c/?q=705530002) |
 | **70553-0041** | J5 | Molex SL Header (7 pos) | 1 | [Molex 70553-0041](https://www.mouser.com/c/?q=705530041) |
 | **Pin Header 1x06** | J2 | 2.00mm Pitch Header | 1 | [Header 1x06 2mm](https://www.mouser.com/c/?q=Pin%20Header%201x06%202.00mm) |
 
