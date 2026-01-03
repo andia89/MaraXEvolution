@@ -1167,7 +1167,8 @@ void handleIncomingSetting(char *message)
 
   else if (strcasecmp(key, "start_cleaning") == 0)
   {
-    if ((strcmp(value, "true") == 0 || strcmp(value, "1") == 0) && currentState == IDLE)
+    if ((strcmp(value, "true") == 0 || strcmp(value, "1") == 0) &&
+        (currentState == IDLE || (currentState == HEATING && boilerTemp >= 80.0)))
     {
       cleaningRepetitionCounter = 0;
       cleaningStateToResume = IDLE;
