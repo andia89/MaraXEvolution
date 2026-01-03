@@ -82,36 +82,36 @@ These parts are not included in the SMT assembly and must be purchased separatel
 | Value | Designator | Qty | Link (Mouser) |
 | :--- | :--- | :--- | :--- |
 | **1K5** | R12 | 1 | [0805 1.5K 0.1%](https://www.mouser.com/c/?q=0805%20resistor%201.5kOhms%200.1%25) |
-| **5K6** | R11 | 1 | [0805 5.6K](https://www.mouser.com/c/?q=0805%20resistor%205.6kOhms) |
-| **10K** | R2, R4 | 2 | [0805 10K 0.1%](https://www.mouser.com/c/?q=0805%20resistor%2010kOhms) |
+| **5K6** | R11 | 1 | [0805 5.6K 0.1%](https://www.mouser.com/c/?q=0805%20resistor%205.6kOhms%200.1%25) |
+| **10K** | R2, R4 | 2 | [0805 10K 0.1%](https://www.mouser.com/c/?q=0805%20resistor%2010kOhms%200.1%25) |
 | **-** | **R16** | **0** | **DNP (Do Not Populate)** |
 
 **ICs & Modules**
 
-| Part Name | Designator | Description | Qty | Link (Mouser) |
-| :--- | :--- | :--- | :--- | :--- |
-| **Arduino Nano ESP32**| A1 | Microcontroller | 1 | [Arduino Nano ESP32](https://www.mouser.com/c/?q=Arduino%20Nano%20ESP32) |
+| Part Name | Designator | Description | Qty | Link (Mouser) | Comment | 
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Arduino Nano ESP32**| A1 | Microcontroller | 1 | [Arduino Nano ESP32](https://www.mouser.com/c/?q=Arduino%20Nano%20ESP32) | with headers if directly soldered to the board. Otherwise [Mill-Max](https://www.mill-max.com/products/new/precision-machined-pin-headers) headers are a way to socket it (there is not enough vertical space for standard machine headers)
 | **ADS1115IDGS** | U1 | 16-Bit ADC | 1 | [ADS1115IDGS](https://www.mouser.com/c/?q=ADS1115IDGS) |
-| **AQV212** | IC1 | PhotoMOS Relay | 1 | [AQV212](https://www.mouser.com/c/?q=AQV212) |
-| **IE092503-1** | U3 | Buzzer | 1 | [IE092503-1](https://www.mouser.com/c/?q=IE092503-1) |
-| **LM4050AEM3-3.0** | IC2 | Voltage Reference 3.0V | 1 | [LM4050AEM3-3.0](https://www.mouser.com/c/?q=LM4050AEM3-3.0) |
+| **AQV212** | IC1 | PhotoMOS Relay | 1 | [AQV212](https://www.mouser.com/c/?q=AQV212%20DIP-6) | can be socketed using standard DIP-6 socket
+| **IE092503-1** | U3 | Buzzer | 1 | [IE092503-1](https://www.mouser.com/c/?q=IE092503-1) | If you don´t want buzzer, can be omitted
+| **LM4050AEM3-3.0** | IC2 | Voltage Reference 3.0V | 1 | [LM4050AEM3-3.0](https://www.mouser.com/c/?q=LM4050AEM3-3.0) | For temperature measurement
 
 **Connectors**
 
-| Part Name | Designator | Description | Qty | Link (Mouser) |
-| :--- | :--- | :--- | :--- | :--- |
+| Part Name | Designator | Description | Qty | Link (Mouser) | Comment | 
+| :--- | :--- | :--- | :--- | :--- | :--- |
 | **280377-2** | CN1, CN2, CN3, CN4, CN5, CN7 | TE Ampmodu II (2 pos) | 6 | [TE 280377-2](https://www.mouser.com/c/?q=280377-2) |
-| **280389-2** | CN6 | TE Ampmodu II (2 pos) | 1 | [TE 280389-2](https://www.mouser.com/c/?q=280389-2) |
-| **70553-0002** | J4 | Molex SL Header (3 pos)<br>*(Optional: Can be omitted if no pressure transducer is to be installed)* | 1 | [Molex 70553-0002](https://www.mouser.com/c/?q=705530002) |
-| **70553-0041** | J5 | Molex SL Header (7 pos) | 1 | [Molex 70553-0041](https://www.mouser.com/c/?q=705530041) |
+| **280389-2** | CN6 | TE Ampmodu II (8 pos) | 1 | [TE 280389-2](https://www.mouser.com/c/?q=280389-2) |
+| **70553-0002** | J4 | Molex SL Header (3 pos)| 1 | [Molex 70553-0002](https://www.mouser.com/c/?q=705530002) | Can be omitted if no pressure transducer is to be installed
+| **70553-0041** | J5 | Molex SL Header (7 pos) | 1 | [Molex 70553-0041](https://www.mouser.com/c/?q=705530041) | Can be omitted if no scale is to be installed
 | **Pin Header 1x06** | J2 | 2.00mm Pitch Header | 1 | [Header 1x06 2mm](https://www.mouser.com/c/?q=Pin%20Header%201x06%202.00mm) |
 
 #### 3. Special Components
-This component is obsolete or hard to find and typically requires sourcing from eBay.
+This component is obsolete and typically requires sourcing from eBay.
 
-| Component | Designator | Note | Link |
-| :--- | :--- | :--- | :--- |
-| **LM1830N** | U2 | Fluid Level Detector | [Search on eBay](https://www.ebay.com/sch/i.html?_nkw=LM1830N) |
+| Component | Designator | Note | Link | Comment |
+| :--- | :--- | :--- | :--- | :--- |
+| **LM1830N** | U2 | Fluid Level Detector | [Search on eBay](https://www.ebay.com/sch/i.html?_nkw=LM1830N) | Can be socketed by using socket for N14A package
 
 ### HV Board
 
