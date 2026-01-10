@@ -15,9 +15,7 @@ This repository contains the hardware design and firmware for the **MaraX Evolut
 * `controller_board/`: KiCad v6 hardware design files (schematics, PCB layout, and fabrication files).
 * `firmware/`: PlatformIO project source code for the ESP32-based controller.
 
-## Parts list
- * PCB for controller board and HV board (use the .bom and .cpl file if you want to use STM service from JLCPCB for the small resistors/capacitors and Transistors/Diodes). Otherwise use suitable 0850 parts and Transistors and Diodes as described in the kicad files. **R4**, **R12**, **R13** and **R2** I suggest to use lower tolerance (e.g. 0.1%) 0850 resistors since they need to be fairly accurate as they are used for voltage divider. As such they are not included in the BOM and CPL file for JLCPCB.
- * Electronic components (these are the components that are not done by the SMT service of JLCPCB and need to be handsoldered)
+
 
 ## Hardware Assembly
 
@@ -34,19 +32,24 @@ The firmware is built using **PlatformIO**.
 3.  Open the `firmware` folder in PlatformIO.
 4.  Configure `platformio.ini` if necessary (e.g., to select specific build environments or upload ports).
 5.  Click the **Build** icon (checkmark) to compile.
-6.  Connect your controller board via USB and click **Upload** (arrow).
-
-## Dependencies
-
-This firmware relies on the following libraries (automatically handled by PlatformIO):
-* `PID_v1`
-* `SimpleKalmanFilter`
-* `dimmable_light`
-* `NextionX2`
+6.  Connect your Arduino Nano ESP32 board via USB and click **Upload** (select `env:firmware` build environment).
+7.  For subsequent uploads OTA should be enabled (you might have to adjust IP-address in `platformio.ini`) and selecting the `env:firmware-ota` environment
 
 ## Firmware setup
 
 ## Parts List
+
+ * PCBs for both the controller board and the HV board. I have good experience with JLCPCB but PCBWay is also fine. The gerber files can be found in production_files in the jlcpcb folder. 
+
+* Electronic parts for assembly. They are listed at the end of this section in [Controller board](#conroller-board) and [HV board](#hv-board)
+
+* If you want to use a pressure transducer (this is necessary to do profiling based on pressure, and to electronically monitor the pressure). 
+    * The board is designed for [this one](https://aliexpress.com/item/4000756631924.html?spm=a2g0o.order_list.order_list_main.5.ee9e1802cAHCQO); specifically 0-1.6MPa at 0.5V-4.5V and a supply voltage of 12V
+    * [T-Piece for pipe](https://www.landefeld.de/artikel/de/t-steckanschluss-5mm-5mm-iqs-msv-standard-/IQST%2050%20MSV). It is important to note that the MaraX uses 5mm pipes which are quite non-standard
+    * [pipe connector](https://www.landefeld.de/artikel/de/steckanschluss-m-innengew-m-5-4mm-iqs-msv-standard-/IQSF%20M54%20MSV)
+    * [5mm polyurethane pipe](https://www.landefeld.de/artikel/de/polyurethan-schlauch-5-x-3-mm-blau-meterware-von-50-mtr-rolle-/PU%205X3%20BLAU); get 1m to have a bit left-over
+    * [Molex connector](https://www.mouser.at/ProductDetail/Molex/14-56-2032?qs=UeCeOHRHQebO0uAgtlfrUw%3D%3D) that has its mate on the controller board
+* If you want to use AC dimmer for flow/pressure profiling (and you either have the Pressure transducer and/or the scale installed) one additional (ideally heat-resistant cable) is necessary. Two [Connectors](https://www.mouser.at/ProductDetail/571-606501) like this one have to be crimped on a sufficiently long cable. 
 
 ### Controller Board
 
@@ -91,10 +94,10 @@ These parts are not included in the SMT assembly and must be purchased separatel
 | Part Name | Designator | Description | Qty | Link (Mouser) | Comment | 
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Arduino Nano ESP32**| A1 | Microcontroller | 1 | [Arduino Nano ESP32](https://www.mouser.com/c/?q=Arduino%20Nano%20ESP32) | with headers if directly soldered to the board. Otherwise [Mill-Max](https://www.mill-max.com/products/new/precision-machined-pin-headers) headers are a way to socket it (there is not enough vertical space for standard machine headers)
-| **ADS1115IDGS** | U1 | 16-Bit ADC | 1 | [ADS1115IDGS](https://www.mouser.com/c/?q=ADS1115IDGS) |
+| **ADS1115IDGS** | U1 | 16-Bit ADC | 1 | [ADS1115IDGS](https://www.mouser.com/c/?q=ADS1115IDGS) | Any ADS1115 will work fine
 | **AQV212** | IC1 | PhotoMOS Relay | 1 | [AQV212](https://www.mouser.com/c/?q=AQV212%20DIP-6) | can be socketed using standard DIP-6 socket
-| **IE092503-1** | U3 | Buzzer | 1 | [IE092503-1](https://www.mouser.com/c/?q=IE092503-1) | If you don´t want buzzer, can be omitted
-| **LM4050AEM3-3.0** | IC2 | Voltage Reference 3.0V | 1 | [LM4050AEM3-3.0](https://www.mouser.com/c/?q=LM4050AEM3-3.0) | For temperature measurement
+| **IE092503-1** | U3 | Buzzer | 1 | [IE092503-1](https://www.mouser.com/c/?q=IE092503-1) | If you don't want a buzzer, can be omitted
+| **LM4050AEM3-3.0** | IC2 | Voltage Reference 3.0V | 1 | [LM4050AEM3-3.0](https://www.mouser.com/c/?q=LM4050AEM3-3.0) | A precise voltage reference for temperature measurements
 
 **Connectors**
 
@@ -104,7 +107,7 @@ These parts are not included in the SMT assembly and must be purchased separatel
 | **280389-2** | CN6 | TE Ampmodu II (8 pos) | 1 | [TE 280389-2](https://www.mouser.com/c/?q=280389-2) |
 | **70553-0002** | J4 | Molex SL Header (3 pos)| 1 | [Molex 70553-0002](https://www.mouser.com/c/?q=705530002) | Can be omitted if no pressure transducer is to be installed
 | **70553-0041** | J5 | Molex SL Header (7 pos) | 1 | [Molex 70553-0041](https://www.mouser.com/c/?q=705530041) | Can be omitted if no scale is to be installed
-| **Pin Header 1x06** | J2 | 2.00mm Pitch Header | 1 | [Header 1x06 2mm](https://www.mouser.com/c/?q=Pin%20Header%201x06%202.00mm) |
+| **MTMM-106-14-T-S-520** | J2 | 2.00mm Pitch Header | 1 | [Header 1x06 2mm](https://www.mouser.com/c/?q=MTMM-106-14-T-S-520) | This mates with the correspnding ESQT connector on the HV board. The exact part numbers are not that important, but the two connectors need to bridge a gap of 27mm (distance between the topsides of both PCBs)
 
 #### 3. Special Components
 This component is obsolete and typically requires sourcing from eBay.
@@ -134,24 +137,24 @@ These parts involve mains voltage or high power and must be sourced separately.
 **High Power Resistors (2010 Package)**
 *Note: These require the larger 2010 [5025 metric] footprint for power handling. Go for Power rating of >1W for those*
 
-| Value | Designator | Qty | Link (Mouser) |
-| :--- | :--- | :--- | :--- |
-| **47k** | R5, R6 | 2 | [2010 Resistor 47k](https://www.mouser.com/c/?q=2010%20resistor%2047k) |
-| **330** | R9 | 1 | [2010 Resistor 330](https://www.mouser.com/c/?q=2010%20resistor%20330) |
-| **39** | R11 | 1 | [2010 Resistor 39](https://www.mouser.com/c/?q=2010%20resistor%2039) |
+| Value | Designator | Qty | Link (Mouser) | Comments |
+| :--- | :--- | :--- | :--- | :--- |
+| **47k** | R5, R6 | 2 | [2010 Resistor 47k](https://www.mouser.com/c/?q=2010%20resistor%2047k) | Use at least 1W rating. Can be omitted if AC dimmer is not used
+| **330** | R9 | 1 | [2010 Resistor 330](https://www.mouser.com/c/?q=2010%20resistor%20330) | Use at least 1W rating. Can be omitted if AC dimmer is not used
+| **39** | R11 | 1 | [2010 Resistor 39](https://www.mouser.com/c/?q=2010%20resistor%2039) | Use at least 1W rating. Can be omitted if AC dimmer is not used
 
 **Relays, Triacs & Power Modules**
 
-| Part Name | Designator | Description | Qty | Link (Mouser) |
-| :--- | :--- | :--- | :--- | :--- |
+| Part Name | Designator | Description | Qty | Link (Mouser) | Comment |
+| :--- | :--- | :--- | :--- | :--- | :--- |
 | **ECE10US12** | U1 | AC-DC Converter 12V | 1 | [ECE10US12](https://www.mouser.com/c/?q=ECE10US12) |
 | **ALDP112** | U2 | Panasonic Relay 12V | 1 | [ALDP112](https://www.mouser.com/c/?q=ALDP112) |
 | **RT314A12** | K1 | TE Schrack Relay 12V | 1 | [RT314A12](https://www.mouser.com/c/?q=RT314A12) |
-| **BTA16-600BWRG**| Q3 | Triac 600V 16A | 1 | [BTA16-600BWRG](https://www.mouser.com/c/?q=BTA16-600BWRG) |
-| **H11L1** | U5 | Optocoupler (Logic) | 1 | [H11L1](https://www.mouser.com/c/?q=H11L1) |
-| **MOC3021M** | U7 | Optocoupler (Triac) | 1 | [MOC3021M](https://www.mouser.com/c/?q=MOC3021M) |
-| **W04G** | D1 | Bridge Rectifier | 1 | [W04G](https://www.mouser.com/c/?q=W04G) |
-| **7178DG** | H1 | Heatsink for Triac | 1 | [7178DG](https://www.mouser.com/c/?q=7178DG) |
+| **BTA16-600BWRG**| Q3 | Triac 600V 16A | 1 | [BTA16-600BWRG](https://www.mouser.com/c/?q=BTA16-600BWRG) | Can be omitted if AC dimmer is not used
+| **H11L1** | U5 | Optocoupler (Logic) | 1 | [H11L1](https://www.mouser.com/c/?q=H11L1) | Can be omitted if AC dimmer is not used. Can be socketed with DIP-6 socket
+| **MOC3021M** | U7 | Optocoupler (Triac) | 1 | [MOC3021M](https://www.mouser.com/c/?q=MOC3021M) | Can be omitted if AC dimmer is not used. Can be socketed with DIP-6 socket
+| **W04G** | D1 | Bridge Rectifier | 1 | [W04G](https://www.mouser.com/c/?q=W04G) | Can be omitted if AC dimmer is not used
+| **7178DG** | H1 | Heatsink for Triac | 1 | [7178DG](https://www.mouser.com/c/?q=7178DG) | Can be omitted if AC dimmer is not used
 
 **Capacitors & Fuses**
 
@@ -168,7 +171,7 @@ These parts involve mains voltage or high power and must be sourced separately.
 | Name | Designator | Description | Qty | Link |
 | :--- | :--- | :--- | :--- | :--- |
 | **Faston Tabs** | FA1, FA4, FA7, FA10, FA11 | PCB Tab 6.35mm | 5 | [571-160650-2](https://www.mouser.at/ProductDetail/571-160650-2) |
-| **Header 1x06** | J6 | 2.00mm Pitch Header | 1 | [Header 1x06 2mm](https://www.mouser.com/c/?q=Pin%20Header%201x06%202.00mm) |
+| **ESQT-106-02-L-S-530** | J6 | 2.00mm Pitch Female Header Receptable | 1 | [Header 1x06 2mm](https://www.mouser.com/c/?q=ESQT-106-02-L-S-530) | This mates with the correspnding MTMM connector on the controller board. The exact part numbers are not that important, but the two connectors need to bridge a gap of 27mm (distance between the topsides of both PCBs)
 
 ## Assembly instructions
 
