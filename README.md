@@ -39,14 +39,14 @@ The firmware is built using **PlatformIO**.
 
 ## Parts List
 
- * PCBs for both the controller board and the HV board. I have good experience with JLCPCB but PCBWay is also fine. The gerber files can be found in production_files in the jlcpcb folder. 
+ * PCBs for both the controller board and the HV board. I had good experience with JLCPCB but PCBWay is also fine. The gerber files can be found in production_files in the jlcpcb folder. 
 
 * Electronic parts for assembly. They are listed at the end of this section in [Controller board](#conroller-board) and [HV board](#hv-board)
 
 * If you want to use a pressure transducer (this is necessary to do profiling based on pressure, and to electronically monitor the pressure). 
     * The board is designed for [this one](https://aliexpress.com/item/4000756631924.html?spm=a2g0o.order_list.order_list_main.5.ee9e1802cAHCQO); specifically 0-1.6MPa at 0.5V-4.5V and a supply voltage of 12V
     * [T-Piece for pipe](https://www.landefeld.de/artikel/de/t-steckanschluss-5mm-5mm-iqs-msv-standard-/IQST%2050%20MSV). It is important to note that the MaraX uses 5mm pipes which are quite non-standard
-    * [pipe connector](https://www.landefeld.de/artikel/de/steckanschluss-m-innengew-m-5-4mm-iqs-msv-standard-/IQSF%20M54%20MSV)
+    * [Pipe push fitting](https://www.landefeld.de/artikel/de/steckanschluss-m-innengew-m-5-4mm-iqs-msv-standard-/IQSF%20M54%20MSV)
     * [5mm polyurethane pipe](https://www.landefeld.de/artikel/de/polyurethan-schlauch-5-x-3-mm-blau-meterware-von-50-mtr-rolle-/PU%205X3%20BLAU); get 1m to have a bit left-over
     * [Molex connector](https://www.mouser.at/ProductDetail/Molex/14-56-2032?qs=UeCeOHRHQebO0uAgtlfrUw%3D%3D) that has its mate on the controller board
 * If you want to use AC dimmer for flow/pressure profiling (and you either have the Pressure transducer and/or the scale installed) one additional (ideally heat-resistant cable) is necessary. Two [Connectors](https://www.mouser.at/ProductDetail/571-606501) like this one have to be crimped on a sufficiently long cable. 
@@ -132,7 +132,7 @@ These components have LCSC part numbers and can be assembled by the JLCPCB SMT s
 | **BSS138** | Q1, Q2 | SOT-23 | [C7420339](https://lcsc.com/product-detail/C7420339.html) | 2 |
 
 #### 2. Handsolder Components (Mouser / DigiKey)
-These parts involve mains voltage or high power and must be sourced separately.
+These parts involve mains voltage or high power.
 
 **High Power Resistors (2010 Package)**
 *Note: These require the larger 2010 [5025 metric] footprint for power handling. Go for Power rating of >1W for those*
@@ -158,9 +158,9 @@ These parts involve mains voltage or high power and must be sourced separately.
 
 **Capacitors & Fuses**
 
-| Part Name | Designator | Description | Qty | Link (Mouser) |
-| :--- | :--- | :--- | :--- | :--- |
-| **VJ2220Y103K...**| C1 | 2220 Safety Cap X2 | 1 | [VJ2220Y103KXUSTX2](https://www.mouser.com/c/?q=VJ2220Y103KXUSTX2) |
+| Part Name | Designator | Description | Qty | Link (Mouser) | Comment |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **VJ2220Y103K...**| C1 | 2220 Safety Cap X2 | 1 | [VJ2220Y103KXUSTX2](https://www.mouser.com/c/?q=VJ2220Y103KXUSTX2) | Can be omitted if AC dimmer is not used
 | **100uF** | C3 | Radial (D6.3mm P2.5mm) | 1 | [100uF Radial 6.3mm 2.5mm](https://www.mouser.com/c/?q=100uF%20radial%206.3mm%202.5mm%20pitch) |
 | **0034.6808** | F1 | Schurter MSS Fuse | 1 | [0034.6808](https://www.mouser.com/c/?q=0034.6808) |
 | **0697H9100-02** | F2 | Bel Fuse Radial | 1 | [0697H9100-02](https://www.mouser.com/c/?q=0697H9100-02) |
@@ -170,8 +170,8 @@ These parts involve mains voltage or high power and must be sourced separately.
 
 | Name | Designator | Description | Qty | Link |
 | :--- | :--- | :--- | :--- | :--- |
-| **Faston Tabs** | FA1, FA4, FA7, FA10, FA11 | PCB Tab 6.35mm | 5 | [571-160650-2](https://www.mouser.at/ProductDetail/571-160650-2) |
-| **ESQT-106-02-L-S-530** | J6 | 2.00mm Pitch Female Header Receptable | 1 | [Header 1x06 2mm](https://www.mouser.com/c/?q=ESQT-106-02-L-S-530) | This mates with the correspnding MTMM connector on the controller board. The exact part numbers are not that important, but the two connectors need to bridge a gap of 27mm (distance between the topsides of both PCBs)
+| **571-160650-2** | FA1, FA4, FA7, FA10, FA11 | Faston Tabs 6.35mm | 5 | [571-160650-2](https://www.mouser.at/ProductDetail/571-160650-2) |
+| **ESQT-106-02-L-S-530** | J6 | 2.00mm Pitch Female Header Receptable | 1 | [Socket 1x06 2mm](https://www.mouser.com/c/?q=ESQT-106-02-L-S-530) | This mates with the corresponding MTMM connector on the controller board. The exact part numbers are not that important, but the two connectors need to bridge a gap of 27mm (distance between the topsides of both PCBs)
 
 ## Assembly instructions
 

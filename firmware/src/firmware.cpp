@@ -47,7 +47,7 @@ const int BREW_SWITCH = A6;
 const int ENABLE_LM1830 = D0;
 const int BUZZER = A1;
 const int LEDMAIN = D6;
-const int LEDHEATER = D8;
+const int LEDHEATER = A2;
 const int LEDWATER = D5;
 const int PUMP_RELAY = A3;
 const int COFFEE_RELAY = D7;
@@ -210,7 +210,7 @@ static unsigned long lastEspNowSendTime = 0;
 // --- SCALE (ADS1232) CONFIGURATION & GLOBALS ---
 // =================================================================
 // --- I2C Configuration ---
-const int PCF8574_ADDRESS = 0x27;
+const int PCF8574_ADDRESS = 0x38;
 const int SCALE_CHANNEL = 2;
 
 // --- PCF8574 Pin Mapping ---
@@ -1334,6 +1334,7 @@ void processCommand(char *command)
 
       printlnToAll("");
       printlnToAll("--- DEBUG SENSORS ---");
+      printlnToAll("  readweight             - Read filtered, raw, and ADC weight values.");
       printlnToAll("  readadc <0-3>          - Read raw value from ADS1115 channel.");
       printlnToAll("  readhxtemp             - Read current HX temperature.");
       printlnToAll("  readboilertemp         - Read current Boiler temperature.");
@@ -1529,6 +1530,53 @@ void processCommand(char *command)
       else
         printlnToAll("FAIL: IC failed (Pin high when OFF).");
     }
+#ifdef HAS_SCALE
+    else if (strcasecmp(cmd, "readweight") == 0)
+    {
+      long currentRawADC;
+      int attempts = 0;
+      const int MAX_ATTEMPTS = 200;
+      do
+      {
+        currentRawADC = readADCScale();
+
+        if (currentRawADC == -1 || currentRawADC == -2)
+        {
+          attempts++;
+          delay(2);
+        }
+      } while ((currentRawADC == -1 || currentRawADC == -2) && attempts < MAX_ATTEMPTS);
+
+      if (currentRawADC == -1 || currentRawADC == -2)
+      {
+        printlnToAll("--- SCALE ERROR ---");
+        printlnToAll("Timeout: Could not retrieve a valid reading.");
+        printlnToAll("Check wiring or if scale is powered.");
+        return;
+      }
+
+      float currentInstantWeight = (float)(currentRawADC - COMBINED_OFFSET) / COMBINED_SCALE;
+
+      printlnToAll("--- SCALE DIAGNOSTIC ---");
+
+      printToAll("Filtered Weight (Kalman): ");
+      printToAll(currentWeight, 2);
+      printlnToAll(" g");
+
+      printToAll("Instant Weight (Unfiltered): ");
+      printToAll(currentInstantWeight, 2);
+      printlnToAll(" g");
+
+      printToAll("Raw ADC Value: ");
+      printlnToAll(currentRawADC);
+
+      printToAll("Calibration Offset: ");
+      printToAll(COMBINED_OFFSET);
+      printToAll(" | Scale Factor: ");
+      printlnToAll(COMBINED_SCALE, 6);
+      printlnToAll("--------------------------");
+    }
+#endif
     else if (strcasecmp(cmd, "pidoutput") == 0)
     {
       if (args && strcasecmp(args, "auto") == 0)
@@ -1771,6 +1819,11 @@ void printStatus()
   bool currentBoilerLevel = !detectBoilerLevel();
 
   printlnToAll("--- STATUS ---");
+  printToAll("WiFi Channel: ");
+  printlnToAll(WiFi.channel());
+  printToAll("WiFi RSSI: ");
+  printToAll(WiFi.RSSI());
+  printlnToAll(" dBm");
   printToAll("Current State: ");
   printlnToAll(stateToString(currentState));
   printToAll("Brew Mode: ");
@@ -2241,6 +2294,8 @@ int checkLM1830()
 
 void periodicBoilerLevelCheck()
 {
+  if (currentState == BOILER_EMPTY)
+    return;
   if (pumpRunning)
   {
     enableWaterLevelSensor(false);
@@ -2250,7 +2305,7 @@ void periodicBoilerLevelCheck()
   static bool isLm1830Enabled = false;
   static bool previousBoilerReadingEmpty = false;
 
-  if ((!isLm1830Enabled && (millis() - lastBoilerCheckTime > BOILER_CHECK_PERIOD) && (currentState != BOILER_EMPTY)) && (currentState != DEBUG))
+  if ((!isLm1830Enabled && (millis() - lastBoilerCheckTime > BOILER_CHECK_PERIOD)) && (currentState != DEBUG))
   {
     isBoilerPinHigh = digitalRead(BOILER_LEVEL);
     enableWaterLevelSensor(true);
@@ -2259,7 +2314,7 @@ void periodicBoilerLevelCheck()
     lastBoilerCheckTime = millis();
   }
 
-  if ((isLm1830Enabled && (millis() - lm1830EnableTime > BOILER_CHECK_DURATION) && (currentState != BOILER_EMPTY)) && (currentState != DEBUG))
+  if ((isLm1830Enabled && (millis() - lm1830EnableTime > BOILER_CHECK_DURATION)) && (currentState != DEBUG))
   {
     bool currentBoilerReadingEmpty = !digitalRead(BOILER_LEVEL);
 
@@ -3674,19 +3729,24 @@ void updatePcf()
  */
 long readADCScale()
 {
+  if (digitalRead(ADS_DOUT_PIN) == HIGH)
+    return -2;
   long reading = 0;
   portENTER_CRITICAL(&scaleMux);
   for (int i = 0; i < 24; i++)
   {
     digitalWrite(ADS_SCLK_PIN, HIGH);
+    delayMicroseconds(1);
     reading <<= 1;
     if (digitalRead(ADS_DOUT_PIN))
     {
       reading |= 1;
     }
     digitalWrite(ADS_SCLK_PIN, LOW);
+    delayMicroseconds(1);
   }
   digitalWrite(ADS_SCLK_PIN, HIGH);
+  delayMicroseconds(1);
   digitalWrite(ADS_SCLK_PIN, LOW);
   portEXIT_CRITICAL(&scaleMux);
 
@@ -3694,6 +3754,12 @@ long readADCScale()
   {
     reading |= 0xFF000000;
   }
+  if (reading == 0x7FFFFF)
+  {
+    updatePcf();
+    return -1;
+  }
+
   return reading;
 }
 
@@ -3744,8 +3810,11 @@ void handleScale()
   if (newDataReady)
   {
     long raw_data = readADCScale();
+    if (raw_data == -2 || raw_data == -1)
+    {
+      return;
+    }
     loadCellValue = raw_data;
-
     float newRawWeight = (float)(raw_data - COMBINED_OFFSET) / COMBINED_SCALE;
 
     if (isFirstScaleReading)
@@ -4040,12 +4109,15 @@ void handleCalibrationStep(float weight)
 
 void setup()
 {
+  delay(1000);
   printlnToAll("Configuring digital input pins...");
   for (const int pin : digitalInputs)
   {
     pinMode(pin, INPUT);
   }
   pinMode(D0, OUTPUT);
+  pinMode(ADS_SCLK_PIN, INPUT_PULLUP);
+  pinMode(ADS_DOUT_PIN, OUTPUT);
   digitalWrite(D0, HIGH);
   printlnToAll("Configuring digital output pins...");
   for (const int pin : startupOutputPins)
@@ -4079,7 +4151,8 @@ void setup()
   digitalWrite(ADS_SCLK_PIN, LOW);
   pinMode(ADS_DOUT_PIN, INPUT_PULLUP);
 
-  powerDown(false);
+  powerDown(true);
+  delay(100);
   setSpeed(false);
   setGain(128);
   selectChannelScale(SCALE_CHANNEL);
@@ -4206,11 +4279,11 @@ void setup()
   {
     transitionToState(ERROR);
   }
-  else if (!readPin(WATER_DETECTOR))
+  else if (waterLevelTripped)
   {
     transitionToState(WATER_EMPTY);
   }
-  else if (!detectBoilerLevel())
+  else if (isBoilerEmpty)
   {
     transitionToState(BOILER_EMPTY);
   }
@@ -4324,8 +4397,7 @@ void loop()
       setBoilerFillValve(true);
       setPump(true);
     }
-
-    bool waterDetected = (digitalRead(BOILER_LEVEL) == HIGH);
+    bool waterDetected = readPin(BOILER_LEVEL);
 
     if (waterDetected)
     {
@@ -4634,9 +4706,9 @@ void loop()
   {
 
     char msgBuffer[10];
-    dtostrf(boilerTemp, 4, 1, msgBuffer);
+    dtostrf(boilerTemp, 4, 2, msgBuffer);
     publishData(mqtt_topic_boiler_temp, msgBuffer, false, false);
-    dtostrf(hxTemp, 4, 1, msgBuffer);
+    dtostrf(hxTemp, 4, 2, msgBuffer);
     publishData(mqtt_topic_hx_temp, msgBuffer, false, false);
 #ifdef HAS_PRESSURE_GAUGE
     dtostrf(pressure, 4, 2, msgBuffer);
