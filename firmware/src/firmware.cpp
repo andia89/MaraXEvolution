@@ -165,6 +165,10 @@ const char *mqtt_topic_set = "espresso/settings/set";
 const char *ota_hostname = "esp32-arduino";
 const char *ota_password = "1234";
 
+// --- Global Connection State ---
+bool isOnline = false;
+WiFiManager wm;
+
 // =================================================================
 // --- SYSTEM & LIBRARY OBJECTS ---
 // =================================================================
@@ -338,8 +342,8 @@ unsigned long lastWaterLevelChangedTime = 0;
 const unsigned long debounceDelay = 100;
 
 // --- Override Flags ---
-bool brewModeOverride = false;
-bool steamBoostOverride = false;
+bool ignoreBrewSwitch = false;
+bool ignoreTempSwitch = false;
 bool firstMqttConnection = true;
 
 // =================================================================
@@ -578,6 +582,7 @@ bool isStable();
 void runPumpProfile();
 float getTargetAt(float currentX);
 void updateBrewMode();
+void updateTempSwitch();
 bool standbyTimoutReached();
 bool isProgrammaticFlushActive();
 void startProgrammaticFlush(unsigned long duration);
@@ -590,6 +595,9 @@ void publishSingleSetting(const char *key, bool forceFlush = true);
 void publishProfile();
 void publishState();
 void generateSparseMap();
+void setup();
+void loop();
+void startNetworkServices();
 
 // =================================================================
 // --- FUNCTION DEFINITIONS ---
@@ -634,7 +642,7 @@ void printlnToAll(double value, int precision)
 
 void publishData(const char *topic, const char *payload, bool retained, bool espNowSendNow, bool sendToMqtt, bool sendToESP)
 {
-  if (sendToMqtt)
+  if (sendToMqtt && isOnline)
   {
     if (mqttClient.connected())
     {
@@ -992,14 +1000,29 @@ void handleIncomingSetting(char *message)
 
   else if (strcasecmp(key, "tempsetbrew") == 0)
   {
-    float oldTempsetbrew = tempSetBrew;
-    tempSetBrew = atof(value);
-    updateCalculatedBoilerTemp();
-    if (currentState == IDLE && abs(tempSetBrew - oldTempsetbrew) > 1e-3)
+    if (strcasecmp(value, "auto") == 0)
     {
-      transitionToState(HEATING);
+      ignoreTempSwitch = false;
+      printlnToAll("Brew Temp returned to 3-Way Switch control.");
+      settingsChanged = true;
     }
-    settingsChanged = true;
+    else
+    {
+      float val = atof(value);
+      if (val > 0)
+      {
+        float oldTemp = tempSetBrew;
+        tempSetBrew = val;
+        updateCalculatedBoilerTemp();
+        ignoreTempSwitch = true;
+        settingsChanged = true;
+
+        if (currentState == IDLE && abs(tempSetBrew - oldTemp) > 0.1)
+        {
+          transitionToState(HEATING);
+        }
+      }
+    }
   }
   else if (strcasecmp(key, "tempsetsteam") == 0)
   {
@@ -1180,36 +1203,33 @@ void handleIncomingSetting(char *message)
     if (strcasecmp(value, "coffee") == 0)
     {
       strcpy(brewMode, "COFFEE");
-      brewModeOverride = true;
+      ignoreBrewSwitch = true;
+      settingsChanged = true;
     }
     else if (strcasecmp(value, "steam") == 0)
     {
       strcpy(brewMode, "STEAM");
-      brewModeOverride = true;
+      ignoreBrewSwitch = true;
+      settingsChanged = true;
     }
     else if (strcasecmp(value, "auto") == 0)
     {
-      brewModeOverride = false;
+      ignoreBrewSwitch = false;
+      printlnToAll("Brew Mode returned to Physical Switch control.");
     }
-    overrideChanged = true;
   }
-  else if (strcasecmp(key, "enablesteamboost") == 0)
+  else if (strcasecmp(key, "steamboost") == 0 || strcasecmp(key, "enablesteamboost") == 0)
   {
     if (strcasecmp(value, "true") == 0 || strcmp(value, "1") == 0)
     {
       enableSteamBoost = true;
-      steamBoostOverride = true;
+      settingsChanged = true;
     }
     else if (strcasecmp(value, "false") == 0 || strcmp(value, "0") == 0)
     {
       enableSteamBoost = false;
-      steamBoostOverride = true;
+      settingsChanged = true;
     }
-    else if (strcasecmp(value, "auto") == 0)
-    {
-      steamBoostOverride = false;
-    }
-    overrideChanged = true;
   }
   else if (strcasecmp(key, "request") == 0)
   {
@@ -3130,50 +3150,64 @@ float getTargetAt(float currentX)
   return prevStepTargetY;
 }
 
+void updateTempSwitch()
+{
+  if (ignoreTempSwitch)
+    return;
+
+  float targetTemp = 92.0;
+
+  if (digitalRead(THREE_WAY_SWITCH1) == HIGH)
+  {
+    targetTemp = 90.0;
+  }
+  else if (digitalRead(THREE_WAY_SWITCH2) == HIGH)
+  {
+    targetTemp = 94.0;
+  }
+
+  if (abs(tempSetBrew - targetTemp) > 0.1)
+  {
+    tempSetBrew = targetTemp;
+    updateCalculatedBoilerTemp();
+
+    char msgBuffer[10];
+    dtostrf(tempSetBrew, 4, 1, msgBuffer);
+    publishData(mqtt_topic_set_temp_brew, msgBuffer, true);
+
+    printToAll("Brew Temp changed via Switch to: ");
+    printlnToAll(tempSetBrew);
+
+    if (currentState == IDLE)
+    {
+      transitionToState(HEATING);
+    }
+  }
+}
+
 void updateBrewMode()
 {
   static char lastBrewMode[7] = "";
   static bool lastSteamBoostState = !enableSteamBoost;
 
-  if (!brewModeOverride)
+  if (!ignoreBrewSwitch)
   {
-    if (threeWaySwitch1High && !threeWaySwitch2High)
-    {
-      strcpy(brewMode, "COFFEE");
-    }
-    else if (!threeWaySwitch1High && threeWaySwitch2High)
-    {
-      strcpy(brewMode, "COFFEE");
-    }
-    else
+    if (digitalRead(TWO_WAY_SWITCH) == HIGH)
     {
       strcpy(brewMode, "STEAM");
-    }
-  }
-
-  if (!steamBoostOverride)
-  {
-    if (threeWaySwitch1High && !threeWaySwitch2High)
-    {
-      enableSteamBoost = false;
-    }
-    else if (!threeWaySwitch1High && threeWaySwitch2High)
-    {
       enableSteamBoost = true;
     }
     else
     {
-      enableSteamBoost = true;
+      strcpy(brewMode, "COFFEE");
+      enableSteamBoost = false;
     }
   }
 
   if (strcmp(brewMode, lastBrewMode) != 0)
   {
-    if (mqttClient.connected())
-    {
-      publishData(mqtt_topic_brew_mode, brewMode, true);
-      strcpy(lastBrewMode, brewMode);
-    }
+    publishData(mqtt_topic_brew_mode, brewMode, true);
+    strcpy(lastBrewMode, brewMode);
     if (currentState == IDLE)
     {
       transitionToState(HEATING);
@@ -3182,11 +3216,8 @@ void updateBrewMode()
 
   if (enableSteamBoost != lastSteamBoostState)
   {
-    if (mqttClient.connected())
-    {
-      publishData(mqtt_topic_steam_boost, enableSteamBoost ? "true" : "false", true);
-      lastSteamBoostState = enableSteamBoost;
-    }
+    publishData(mqtt_topic_steam_boost, enableSteamBoost ? "true" : "false", true);
+    lastSteamBoostState = enableSteamBoost;
   }
 }
 
@@ -3267,6 +3298,7 @@ void startProgrammaticFlush(unsigned long duration)
 // ----------------------------------------------------------------
 // --- Settings & Configuration ---
 // ----------------------------------------------------------------
+
 void saveSettings()
 {
   printlnToAll("Saving settings to flash memory...");
@@ -3278,7 +3310,10 @@ void saveSettings()
   preferences.putString("mqttUser", mqtt_user);
   preferences.putString("mqttPass", mqtt_password);
 
-  preferences.putFloat("tempSetBrew", tempSetBrew);
+  if (ignoreTempSwitch)
+  {
+    preferences.putFloat("tempSetBrew", tempSetBrew);
+  }
   preferences.putFloat("tempSetSteam", tempSetSteam);
   preferences.putFloat("tempSetSteamB", tempSetSteamBoost);
 
@@ -3304,16 +3339,11 @@ void saveSettings()
 #endif
 
   // Save MQTT override states
-  preferences.putBool("mqttBrewOvr", brewModeOverride);
-  preferences.putBool("mqttBoostOvr", steamBoostOverride);
-  if (brewModeOverride)
+  if (ignoreBrewSwitch)
   {
-    preferences.putString("mqttBrewMode", brewMode);
+    preferences.putString("brewMode", brewMode);
   }
-  if (steamBoostOverride)
-  {
-    preferences.putBool("mqttBoostVal", enableSteamBoost);
-  }
+  preferences.putBool("enableSteamBoost", enableSteamBoost);
 #ifdef HAS_SCALE
   preferences.putLong("scaleOffset", COMBINED_OFFSET);
   preferences.putFloat("scaleScale", COMBINED_SCALE);
@@ -3344,8 +3374,20 @@ void loadSettings()
   if (preferences.getString("mqttPass", mqtt_password, sizeof(mqtt_password)) == 0)
     mqtt_password[0] = '\0';
   mqtt_port = preferences.getInt("mqttPort", 1883);
+  enableSteamBoost = preferences.getBool("enableSteamBoost", true);
 
-  tempSetBrew = preferences.getFloat("tempSetBrew", 94.0);
+  if (preferences.isKey("tempSetBrew"))
+  {
+    tempSetBrew = preferences.getFloat("tempSetBrew", 94.0);
+    ignoreTempSwitch = true;
+    printlnToAll("Loaded Brew Temp from Flash.");
+  }
+  else
+  {
+    ignoreTempSwitch = false;
+    printlnToAll("No saved Brew Temp. Defaulting to Switch.");
+  }
+
   updateCalculatedBoilerTemp();
   tempSetSteam = preferences.getFloat("tempSetSteam", 136.0);
   tempSetSteamBoost = preferences.getFloat("tempSetSteamB", 124.0);
@@ -3371,20 +3413,16 @@ void loadSettings()
   weightKalmanQ = preferences.getFloat("weightKalmanQ", 0.1);
 #endif
 
-  brewModeOverride = preferences.getBool("mqttBrewOvr", false);
-  steamBoostOverride = preferences.getBool("mqttBoostOvr", false);
-
-  if (brewModeOverride)
+  if (preferences.isKey("brewMode"))
   {
-    preferences.getString("mqttBrewMode", brewMode, sizeof(brewMode));
+    preferences.getString("brewMode", brewMode, sizeof(brewMode));
+    ignoreBrewSwitch = true;
+    printlnToAll("Loaded Brew Mode from Flash.");
   }
   else
   {
-    strcpy(brewMode, "COFFEE");
-  }
-  if (steamBoostOverride)
-  {
-    enableSteamBoost = preferences.getBool("mqttBoostVal", true);
+    ignoreBrewSwitch = false;
+    printlnToAll("No saved Brew Mode. Defaulting to Switch.");
   }
 
 #ifdef HAS_PRESSURE_GAUGE
@@ -3668,6 +3706,45 @@ void publishSettings()
 #endif
 
   printlnToAll("Full settings sync complete.");
+}
+
+void startNetworkServices()
+{
+#ifdef HAS_SCREEN
+  printlnToAll("Initializing ESP-NOW...");
+  if (esp_now_init() != ESP_OK)
+  {
+    printlnToAll("Error initializing ESP-NOW");
+    return;
+  }
+  esp_wifi_set_ps(WIFI_PS_NONE);
+  esp_now_register_recv_cb(OnDataRecv);
+  esp_now_register_send_cb(OnDataSent);
+#endif
+  mqttClient.onConnect(onMqttConnect);
+  mqttClient.onDisconnect(onMqttDisconnect);
+  mqttClient.onMessage(onMqttMessage);
+
+  mqttClient.setServer(mqtt_server, mqtt_port);
+  if (strcmp(mqtt_user, "") != 0)
+  {
+    mqttClient.setCredentials(mqtt_user, mqtt_password);
+  }
+  mqttClient.setClientId(mqtt_client_id);
+  if (strcmp(mqtt_server, "") != 0)
+  {
+    printlnToAll("Connecting to MQTT broker...");
+    mqttClient.connect();
+  }
+  else
+  {
+    printlnToAll("MQTT server not set. Skipping initial connection.");
+  }
+
+  ArduinoOTA.setHostname(ota_hostname);
+  ArduinoOTA.setPassword(ota_password);
+  ArduinoOTA.begin();
+  printlnToAll("OTA Ready");
 }
 
 void publishState()
@@ -4204,64 +4281,42 @@ void setup()
   weightKalmanFilter.setProcessNoise(weightKalmanQ);
 #endif
 
-  WiFiManager wm;
+  wm.setConfigPortalBlocking(false);
+  wm.setTimeout(0);
 
-  wm.setConfigPortalTimeout(180);
-
-  if (!wm.autoConnect("MaraX-Setup"))
+  if (wm.autoConnect("MaraX-Setup"))
   {
-    printlnToAll("Failed to connect and hit timeout. Rebooting...");
-    delay(3000);
-    ESP.restart();
-  }
-
-  printToAll("Connected to WiFi: ");
-  printlnToAll(WiFi.SSID());
-  WiFi.mode(WIFI_AP_STA);
-#ifdef HAS_SCREEN
-  printlnToAll("Initializing ESP-NOW...");
-  if (esp_now_init() != ESP_OK)
-  {
-    printlnToAll("Error initializing ESP-NOW");
-    return;
-  }
-  esp_wifi_set_ps(WIFI_PS_NONE);
-  esp_now_register_recv_cb(OnDataRecv);
-  esp_now_register_send_cb(OnDataSent);
-#endif
-  mqttClient.onConnect(onMqttConnect);
-  mqttClient.onDisconnect(onMqttDisconnect);
-  mqttClient.onMessage(onMqttMessage);
-
-  mqttClient.setServer(mqtt_server, mqtt_port);
-  if (strcmp(mqtt_user, "") != 0)
-  {
-    mqttClient.setCredentials(mqtt_user, mqtt_password);
-  }
-  mqttClient.setClientId(mqtt_client_id);
-  if (strcmp(mqtt_server, "") != 0)
-  {
-    printlnToAll("Connecting to MQTT broker...");
-    mqttClient.connect();
+    printToAll("Connected to WiFi: ");
+    printlnToAll(WiFi.SSID());
+    isOnline = true;
+    WiFi.mode(WIFI_AP_STA);
   }
   else
   {
-    printlnToAll("MQTT server not set. Skipping initial connection.");
+    printlnToAll("WiFi not connected. Running in offline mode (AP might be active in background).");
+    isOnline = false;
   }
 
-  ArduinoOTA.setHostname(ota_hostname);
-  ArduinoOTA.setPassword(ota_password);
-  ArduinoOTA.begin();
-  printlnToAll("OTA Ready");
+  if (!isOnline)
+  {
+    printlnToAll("Offline Mode: Reverting to physical switches.");
+    ignoreTempSwitch = false;
+    ignoreBrewSwitch = false;
+  }
+
+  if (isOnline)
+  {
+    startNetworkServices();
+  }
 
   telnetServer.begin();
   printToAll("Telnet server started. Connect to ");
   printToAll(WiFi.localIP());
   printlnToAll(" on port 23.");
   printlnToAll("Type 'help' for a list of commands.");
-
   pollDigitalInputs();
   updateBrewMode();
+  updateTempSwitch();
   updateSensorReadings();
 
   waterLevelTripped = !readPin(WATER_DETECTOR);
@@ -4296,20 +4351,45 @@ void setup()
 void loop()
 {
   unsigned long nowTime = millis();
+
+  wm.process();
+
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    if (!isOnline)
+    {
+      printlnToAll("WiFi Connected!");
+      isOnline = true;
+      startNetworkServices();
+    }
+  }
+  else
+  {
+    if (isOnline)
+    {
+      printlnToAll("WiFi Lost!");
+      isOnline = false;
+    }
+  }
+
   if (isBeeping && nowTime >= beepStopTime)
   {
     digitalWrite(BUZZER, LOW);
     isBeeping = false;
   }
-  ArduinoOTA.handle();
-  handleTelnet();
-#ifdef HAS_SCREEN
-  if (nowTime - lastEspNowSendTime > ESP_NOW_SEND_INTERVAL_MS)
+  if (isOnline)
   {
-    sendEspNowBuffer();
-    lastEspNowSendTime = nowTime;
-  }
+    ArduinoOTA.handle();
+
+#ifdef HAS_SCREEN
+    if (nowTime - lastEspNowSendTime > ESP_NOW_SEND_INTERVAL_MS)
+    {
+      sendEspNowBuffer();
+      lastEspNowSendTime = nowTime;
+    }
 #endif
+  }
+  handleTelnet();
   pollDigitalInputs();
   updateSensorReadings();
 #ifdef HAS_SCALE
@@ -4317,6 +4397,7 @@ void loop()
 #endif
   periodicBoilerLevelCheck();
   updateBrewMode();
+  updateTempSwitch();
 
   bool errorState = false;
   if (currentState != DEBUG)
