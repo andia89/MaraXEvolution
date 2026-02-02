@@ -11,12 +11,12 @@ This repository contains the hardware design and firmware for the **MaraX Evolut
 * **Scale Integration:** Native support for the [MaraX Evolution Scale](https://github.com/andia89/maraxevolution-scale).
 * **HMI Support:** Interfacing with the [MaraX Evolution HMI](https://github.com/andia89/maraxevolution-hmi) (Nextion display).
 * **WiFi & MQTT:** Remote monitoring and control via MQTT.
+* **Hardware:** Reusing as much as possible from the original machine, only the computer, one tube and one cable has to be replaced, otherwise the excellent hardware of the original machine is used (including its temperature calibration)
 
 ## Repository Structure
 
 * `controller_board/`: KiCad v6 hardware design files (schematics, PCB layout, and fabrication files).
 * `firmware/`: PlatformIO project source code for the ESP32-based controller.
-
 
 
 ## Hardware Assembly
@@ -45,6 +45,10 @@ The firmware is built using **PlatformIO**.
 
 ## Support me
 
+## Limitations
+* The MaraX is a very good heatexchanger machine, using quite sophisticated hardware to achieve superior temperature stability than a lot of other HX machines out of the box. It is, however, not a dual boiler machine and as such perfect temperature control is almost impossible. I played around a lot with PID values and was able to come up with some good values (and some pretty sophisticated feed forward control), but still perfect stability is almost impossible (or only if one tunes the PID super conservative, but then it takes hours to heat the machine)
+* This is not a cheap project. Most parts can be sourced pretty cheaply, but I used good ADC chips (the ADS1115) and one unfortunately obsolete LM1830 chip for boiler water level detection. All in all expect to spend a bit of money if you go for the full set (which is recommended).
+* In the end the softweare got waaaaay more complicated than I originally anticipated. Some software was written using AI but I went through all of it and made sure it made sense to me. There certainly will be bugs as there is an infinite amount of edge cases I certainly have not considered. Please report any bugs you may find
 
 ## Disclaimer & Safety Warning
 
@@ -84,3 +88,6 @@ This project is dual-licensed to protect the work while allowing for personal st
 * **Firmware:** The hardware designs, schematics, and 3D models located in the /controller_board and /hv_board directories are licensed under the Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) license.
 
 Please see the LICENSE file in each respective subdirectory for the full legal text.
+
+## Similar projects
+Idea for controlling the pump via an AC dimmer has been done in https://github.com/larszi/marax-pressure-mod. A complete overhaul of control software is currently proposed by the great project in https://github.com/variegated-coffee (they try to make a one-fit all solution though)
