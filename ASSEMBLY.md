@@ -12,6 +12,7 @@ If you ordered SMT assembly (e.g., from JLCPCB), your boards should arrive in th
 
 ### 2. Controller Board Assembly
 [<img src="https://github.com/user-attachments/assets/12f04637-929b-4e32-97e9-930ab41f4924" width="450" alt="Assembled controller board">](https://github.com/user-attachments/assets/12f04637-929b-4e32-97e9-930ab41f4924)
+
 Above is the fully assembled controller board. 
 
 **Key Assembly Notes:**
@@ -21,6 +22,7 @@ Above is the fully assembled controller board.
 
 ### 3. HV-Board Assembly
 [<img src="https://github.com/user-attachments/assets/1e37c6e1-696d-41fc-987f-07d94724000b" width="450" alt="Assembled HV board">](https://github.com/user-attachments/assets/1e37c6e1-696d-41fc-987f-07d94724000b)
+
 Above is the fully assembled High Voltage (HV) board.
 
 **Key Assembly Notes:**
@@ -57,9 +59,9 @@ Replace the existing transparent silicone tube with a **5mm polyurethane tube (f
 3.  This new wire will connect to the modified Gicar box (detailed in Phase 4).
 
 ### 7. Transducer Connection
-<img width="1336" height="1780" alt="image" src="https://github.com/user-attachments/assets/a6955f76-337c-45ba-98c9-09f81a4d1a6b" />
+[<img src="https://github.com/user-attachments/assets/9462ca87-df7b-42ad-8284-b255f486efc5" width="450" alt="Transducer molex connector5">](https://github.com/user-attachments/assets/9462ca87-df7b-42ad-8284-b255f486efc5)
 
-Terminate the pressure transducer wires with a Molex connector. This will mate with the corresponding header on the controller board.
+Terminate the pressure transducer wires with a Molex connector. This will mate with the corresponding header on the controller board. Make sure the order is exactly as shown in the picture with red being 12V, black being GND and yellow the signal cable.
 
 ---
 
@@ -67,6 +69,7 @@ Terminate the pressure transducer wires with a Molex connector. This will mate w
 
 ### 8. High Voltage (Faston) Connections
 [<img src="https://github.com/user-attachments/assets/db68a03c-02f9-4e8a-b33e-5b859a19b8ac" width="450" alt="Bottom controller connections">](https://github.com/user-attachments/assets/db68a03c-02f9-4e8a-b33e-5b859a19b8ac)
+
 Connect the Faston tabs to the Gicar box.
 
 > [!WARNING]
@@ -81,6 +84,7 @@ Connect the Faston tabs to the Gicar box.
 
 ### 9. Top Controller Connections
 [<img src="https://github.com/user-attachments/assets/f80dea4b-8075-4388-870e-5d993e090e9b" width="450" alt="Gicar box Faston connections">](https://github.com/user-attachments/assets/f80dea4b-8075-4388-870e-5d993e090e9b)
+
 On the top side of the controller board, connect the existing machine connectors in the following order:
 
 * **Boiler Temperature Sensor**
@@ -90,6 +94,7 @@ On the top side of the controller board, connect the existing machine connectors
 
 ### 10. Bottom Controller Connections (Low Voltage)
 [<img src="https://github.com/user-attachments/assets/c3b830b4-7888-44e8-86a4-bd78d6e86eda" width="450" alt="Final assembly view">](https://github.com/user-attachments/assets/c3b830b4-7888-44e8-86a4-bd78d6e86eda)
+
 Connect the low voltage peripherals to the bottom of the board in the following order:
 
 * **Water Level Sensor (Tank)**
