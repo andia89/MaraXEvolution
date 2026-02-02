@@ -6,11 +6,11 @@ This repository contains the hardware design and firmware for the **MaraX Evolut
 
 ## Features
 
-* **Precise Temperature Control:** PID implementation for boiler temperature stability.
-* **Pressure Profiling:** Control over the pump pressure (requires compatible hardware). Up to 32 custom profiles can be defined (requires the HMI Screen).
-* **Scale Integration:** Native support for the [MaraX Evolution Scale](https://github.com/andia89/maraxevolution-scale).
-* **HMI Support:** Interfacing with the [MaraX Evolution HMI](https://github.com/andia89/maraxevolution-hmi) (Nextion display).
-* **WiFi & MQTT:** Remote monitoring and control via MQTT.
+* **Precise Temperature Control:** PID implementation for brew temperature stability.
+* **Pressure Profiling:** Control over the pump pressure (requires compatible hardware). Up to 32 custom profiles can be defined (requires the HMI Screen). Profiling via flowrate (requires the scale to be installed) or pressure based on weight or time.
+* **Scale Integration:** [MaraX Evolution Scale](https://github.com/andia89/maraxevolution-scale) as an optional upgrade.
+* **HMI Support:** Interfacing with the [MaraX Evolution HMI](https://github.com/andia89/maraxevolution-hmi) (also optional) allows to control the machine with a sophisticated HMI device (based on a Nextion display).
+* **WiFi & MQTT:** Remote monitoring and control via MQTT. Integration of the coffee machine in your smarthome
 * **Hardware:** Reusing as much as possible from the original machine, only the computer, one tube and one cable has to be replaced, otherwise the excellent hardware of the original machine is used (including its temperature calibration)
 
 ## Repository Structure
@@ -22,7 +22,7 @@ This repository contains the hardware design and firmware for the **MaraX Evolut
 ## Hardware Assembly
 
 1.  **PCB Fabrication:** Use the Gerber and Drill files provided in `controller_board/jlcpcb/production_files/` to order the PCB.
-2.  **Assembly:** Solder the components according to the BOM (`BOM-controller_board.csv`). The board features an ESP32/Arduino-compatible footprint.
+2.  **Assembly:** Solder the components according to the BOM (`BOM-controller_board.csv`). The board features an Arduino-Nano ESP32 compatible footprint. See [Assembly](ASSEMBLY.md) for details
 3.  **Installation:** Replace the existing Mara X controller with this board, ensuring all connections (sensors, pump, heating element) are mapped correctly.
 
 ## Firmware Compilation
