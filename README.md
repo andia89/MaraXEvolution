@@ -1,4 +1,7 @@
 # MaraX Evolution - Main Controller
+![License](https://img.shields.io/badge/license-PolyForm%20Noncommercial-blue)
+![Platform](https://img.shields.io/badge/platform-ESP32-green)
+![Status](https://img.shields.io/badge/status-active-success)
 
 [<img src="https://github.com/user-attachments/assets/aa3f5071-2165-40e5-ae51-54051c40426c" width="450" alt="">](https://github.com/user-attachments/assets/aa3f5071-2165-40e5-ae51-54051c40426c)
 
@@ -6,12 +9,25 @@ This repository contains the hardware design and firmware for the **MaraX Evolut
 
 ## Features
 
-* **Precise Temperature Control:** PID implementation for brew temperature stability.
-* **Pressure Profiling:** Control over the pump pressure (requires compatible hardware). Up to 32 custom profiles can be defined (requires the HMI Screen). Profiling via flowrate (requires the scale to be installed) or pressure based on weight or time.
-* **Scale Integration:** [MaraX Evolution Scale](https://github.com/andia89/maraxevolution-scale) as an optional upgrade.
-* **HMI Support:** Interfacing with the [MaraX Evolution HMI](https://github.com/andia89/maraxevolution-hmi) (also optional) allows to control the machine with a sophisticated HMI device (based on a Nextion display).
-* **WiFi & MQTT:** Remote monitoring and control via MQTT. Integration of the coffee machine in your smarthome
-* **Hardware:** Reusing as much as possible from the original machine, only the computer, one tube and one cable has to be replaced, otherwise the excellent hardware of the original machine is used (including its temperature calibration)
+### Core Control
+* **Hybrid Thermal Control:** Utilizes a custom **Feed-Forward + PID algorithm** (`feedForwardHeater`) that estimates heat loss based on ambient vs. boiler temperature, offering better stability than standard PIDs.
+* **Dual-PID Architecture:** Dedicated PID loops for Temperature (Boiler/HX) and Pump (Pressure/Flow).
+* **Smart State Machine:** Manages states including `COOLING_FLUSH`, `STEAM_BOOST`, and `STANDBY`.
+
+### Profiling & Extraction
+* **Pressure Profiling:** Real-time pump dimmer control via Zero-Cross detection.
+* **Flow Profiling:** (Requires Scale) Target specific flow rates (g/s) using Kalman-filtered weight data.
+* **Advanced Profiles:** Supports manual control, flat 9-bar shots, or complex JSON-based profiles (Ramped or Stepped).
+
+### Integration & Connectivity
+* **WiFi & MQTT:** Full smart home integration. Reports sensors (`boiler_temp`, `pressure`, `weight`) and accepts commands remotely.
+* **Telnet CLI:** Built-in command-line interface for debugging and calibration over WiFi.
+* **ESP-NOW HMI:** Low-latency connection to the optional [MaraX Evolution HMI](https://github.com/andia89/maraxevolution-hmi).
+* **OTA Updates:** Update firmware wirelessly without opening the machine.
+
+### Maintenance
+* **Automated Cleaning:** Built-in backflush program (`CLEANING_START` -> `CLEANING_PUMPING` -> `PAUSE`).
+* **Scale Calibration:** Integrated wizard for taring and calibrating the load cell.
 
 ## Repository Structure
 
@@ -26,6 +42,14 @@ This repository contains the hardware design and firmware for the **MaraX Evolut
 3.  **Installation:** Replace the existing Mara X controller with this board, ensuring all connections (sensors, pump, heating element) are mapped correctly.
 
 ## Firmware Compilation
+
+The firmware is modular. You can enable/disable hardware features in `main.cpp` or via `platformio.ini` build flags:
+
+```cpp
+#define HAS_PRESSURE_GAUGE // Enables Pump Dimming and Pressure Transducer
+#define HAS_SCALE          // Enables ADS1232 and Flow Profiling
+#define HAS_SCREEN         // Enables ESP-NOW for Nextion HMI
+```
 
 The firmware is built using **PlatformIO**.
 
