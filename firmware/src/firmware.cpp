@@ -41,8 +41,8 @@
 const int BOILER_LEVEL = D1;
 const int WATER_DETECTOR = D3;
 const int THREE_WAY_SWITCH1 = D9;
-const int THREE_WAY_SWITCH2 = D10;
-const int TWO_WAY_SWITCH = D11;
+const int THREE_WAY_SWITCH2 = D11;
+const int TWO_WAY_SWITCH = D10;
 const int BREW_SWITCH = A6;
 const int ENABLE_LM1830 = D0;
 const int BUZZER = A1;
@@ -974,7 +974,6 @@ void handleIncomingSetting(char *message)
   char *value = separator + 1;
 
   bool settingsChanged = false;
-  bool overrideChanged = false;
   bool connectionSettingsChanged = false;
 
   if (strcasecmp(key, "mqtt_server") == 0)
@@ -1002,9 +1001,9 @@ void handleIncomingSetting(char *message)
   {
     if (strcasecmp(value, "auto") == 0)
     {
-      ignoreTempSwitch = false;
       printlnToAll("Brew Temp returned to 3-Way Switch control.");
       settingsChanged = true;
+      ignoreTempSwitch = false;
     }
     else
     {
@@ -1200,16 +1199,17 @@ void handleIncomingSetting(char *message)
   }
   else if (strcasecmp(key, "brewmode") == 0)
   {
+
     if (strcasecmp(value, "coffee") == 0)
     {
-      strcpy(brewMode, "COFFEE");
       ignoreBrewSwitch = true;
+      strcpy(brewMode, "COFFEE");
       settingsChanged = true;
     }
     else if (strcasecmp(value, "steam") == 0)
     {
-      strcpy(brewMode, "STEAM");
       ignoreBrewSwitch = true;
+      strcpy(brewMode, "STEAM");
       settingsChanged = true;
     }
     else if (strcasecmp(value, "auto") == 0)
@@ -1220,6 +1220,7 @@ void handleIncomingSetting(char *message)
   }
   else if (strcasecmp(key, "steamboost") == 0 || strcasecmp(key, "enablesteamboost") == 0)
   {
+    ignoreBrewSwitch = true;
     if (strcasecmp(value, "true") == 0 || strcmp(value, "1") == 0)
     {
       enableSteamBoost = true;
@@ -1244,7 +1245,7 @@ void handleIncomingSetting(char *message)
     printlnToAll(key);
   }
 
-  if (settingsChanged || overrideChanged || connectionSettingsChanged)
+  if (settingsChanged || connectionSettingsChanged)
   {
     saveSettings();
   }
@@ -1836,6 +1837,7 @@ void printStatus()
   bool currentSwitch1 = (digitalRead(THREE_WAY_SWITCH1) == HIGH);
   bool currentSwitch2 = (digitalRead(THREE_WAY_SWITCH2) == HIGH);
   bool currentWaterLevel = (digitalRead(WATER_DETECTOR) == LOW);
+  bool currentTwoWaySwitch = (digitalRead(TWO_WAY_SWITCH) == HIGH);
   bool currentBoilerLevel = !detectBoilerLevel();
 
   printlnToAll("--- STATUS ---");
@@ -1866,6 +1868,8 @@ void printStatus()
   printlnToAll("--- INPUTS ---");
   printToAll("Brew Lever: ");
   printlnToAll(currentBrewLever ? "LIFTED" : "DOWN");
+  printToAll("2-Way Switch: ");
+  printlnToAll(currentTwoWaySwitch ? "STEAM (HIGH)" : "COFFEE (LOW)");
   printToAll("3-Way Switch1: ");
   printToAll(currentSwitch1 ? "HIGH" : "LOW");
   printToAll(", Switch2: ");
@@ -3343,7 +3347,7 @@ void saveSettings()
   {
     preferences.putString("brewMode", brewMode);
   }
-  preferences.putBool("enableSteamBoost", enableSteamBoost);
+  preferences.putBool("steamBoost", enableSteamBoost);
 #ifdef HAS_SCALE
   preferences.putLong("scaleOffset", COMBINED_OFFSET);
   preferences.putFloat("scaleScale", COMBINED_SCALE);
@@ -3374,7 +3378,7 @@ void loadSettings()
   if (preferences.getString("mqttPass", mqtt_password, sizeof(mqtt_password)) == 0)
     mqtt_password[0] = '\0';
   mqtt_port = preferences.getInt("mqttPort", 1883);
-  enableSteamBoost = preferences.getBool("enableSteamBoost", true);
+  enableSteamBoost = preferences.getBool("steamBoost", true);
 
   if (preferences.isKey("tempSetBrew"))
   {
@@ -3412,7 +3416,6 @@ void loadSettings()
   weightKalmanE = preferences.getFloat("weightKalmanE", 2.0);
   weightKalmanQ = preferences.getFloat("weightKalmanQ", 0.1);
 #endif
-
   if (preferences.isKey("brewMode"))
   {
     preferences.getString("brewMode", brewMode, sizeof(brewMode));
@@ -3423,6 +3426,7 @@ void loadSettings()
   {
     ignoreBrewSwitch = false;
     printlnToAll("No saved Brew Mode. Defaulting to Switch.");
+    updateBrewMode();
   }
 
 #ifdef HAS_PRESSURE_GAUGE

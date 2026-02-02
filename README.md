@@ -5,7 +5,7 @@ This repository contains the hardware design and firmware for the **MaraX Evolut
 ## Features
 
 * **Precise Temperature Control:** PID implementation for boiler temperature stability.
-* **Pressure Profiling:** Control over the pump pressure (requires compatible hardware).
+* **Pressure Profiling:** Control over the pump pressure (requires compatible hardware). Up to 32 custom profiles can be defined (requires the HMI Screen).
 * **Scale Integration:** Native support for the [MaraX Evolution Scale](https://github.com/andia89/maraxevolution-scale).
 * **HMI Support:** Interfacing with the [MaraX Evolution HMI](https://github.com/andia89/maraxevolution-hmi) (Nextion display).
 * **WiFi & MQTT:** Remote monitoring and control via MQTT.
@@ -48,7 +48,7 @@ The firmware is built using **PlatformIO**.
     * [T-Piece for pipe](https://www.landefeld.de/artikel/de/t-steckanschluss-5mm-5mm-iqs-msv-standard-/IQST%2050%20MSV). It is important to note that the MaraX uses 5mm pipes which are quite non-standard
     * [Pipe push fitting](https://www.landefeld.de/artikel/de/steckanschluss-m-innengew-m-5-4mm-iqs-msv-standard-/IQSF%20M54%20MSV)
     * [5mm polyurethane pipe](https://www.landefeld.de/artikel/de/polyurethan-schlauch-5-x-3-mm-blau-meterware-von-50-mtr-rolle-/PU%205X3%20BLAU); get 1m to have a bit left-over
-    * [Molex connector](https://www.mouser.at/ProductDetail/Molex/14-56-2032?qs=UeCeOHRHQebO0uAgtlfrUw%3D%3D) that has its mate on the controller board
+    * [Molex connector](https://www.mouser.at/ProductDetail/Molex/50-57-9403?qs=u6Gr9%2FNt%252B%2F9Ok3bHhq8UPA%3D%3D) that has its mate on the controller board, with at least [3 Receptables that need to be crimped on the wire](https://www.mouser.at/ProductDetail/Molex/16-02-0102?qs=UAyrm%2FnZ%252BCifWkt7bqgfPw%3D%3D)
 * If you want to use AC dimmer for flow/pressure profiling (and you either have the Pressure transducer and/or the scale installed) one additional (ideally heat-resistant cable) is necessary. Two [Connectors](https://www.mouser.at/ProductDetail/571-606501) like this one have to be crimped on a sufficiently long cable. 
 
 ### Controller Board
@@ -56,7 +56,7 @@ The firmware is built using **PlatformIO**.
 The BOM for the controller board is divided into **SMD components** (suitable for JLCPCB's SMT service) and **Handsolder components** (precision parts, connectors, and the microcontroller to be sourced from Mouser/DigiKey).
 
 #### 1. SMD Components (JLCPCB SMT Service)
-These components have LCSC part numbers included in the BOM and can be assembled by the JLCPCB SMT service. Alternatively they can be of course hand soldered. These Resistors and Capacitors are mainly used for Pull-up/down, current limiting and filtering, as such their exact values are not that important. The transistors are mainly used for switching LEDs
+These components have LCSC part numbers included in the BOM and can be assembled by the JLCPCB SMT service. Alternatively they can be of course hand soldered. These Resistors and Capacitors are mainly used for Pull-up/down, current limiting and filtering, as such their exact values are not that important. The transistors are mainly used for switching LEDs. In both controller_board and hv_board folder there is a jlcpcb folder that contains all the necessary files for fabrication as well as SMT assembly.
 
 | Comment | Designator | Footprint | LCSC Part | Qty |
 | :--- | :--- | :--- | :--- | :--- |
@@ -173,7 +173,7 @@ These parts involve mains voltage or high power.
 | **571-160650-2** | FA1, FA4, FA7, FA10, FA11 | Faston Tabs 6.35mm | 5 | [571-160650-2](https://www.mouser.at/ProductDetail/571-160650-2) |
 | **ESQT-106-02-L-S-530** | J6 | 2.00mm Pitch Female Header Receptable | 1 | [Socket 1x06 2mm](https://www.mouser.com/c/?q=ESQT-106-02-L-S-530) | This mates with the corresponding MTMM connector on the controller board. The exact part numbers are not that important, but the two connectors need to bridge a gap of 27mm (distance between the topsides of both PCBs)
 
-## Assembly instructions
+## [Assembly instructions](ASSEMBLY.md)
 
 ## Support me
 
