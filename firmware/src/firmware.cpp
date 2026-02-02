@@ -1313,6 +1313,7 @@ void processCommand(char *command)
     printlnToAll("--- GENERAL COMMANDS ---");
     printlnToAll("  help              - Shows this message.");
     printlnToAll("  status            - Prints system status.");
+    printlnToAll("  exit              - Closes the Telnet connection.");
     printlnToAll("  reboot            - Restarts the device.");
     printlnToAll("  macaddress        - Prints WiFi MAC.");
     printlnToAll("  lasterror         - Shows last critical error.");
@@ -1375,6 +1376,11 @@ void processCommand(char *command)
     printlnToAll("Rebooting device...");
     delay(100);
     ESP.restart();
+  }
+  else if (strcasecmp(cmd, "exit") == 0)
+  {
+    printlnToAll("Goodbye!");
+    telnetClient.stop();
   }
   else if (strcasecmp(cmd, "lasterror") == 0)
   {
