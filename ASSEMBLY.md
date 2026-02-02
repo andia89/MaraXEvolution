@@ -1,35 +1,99 @@
-## Assembly instructions
+# Assembly Instructions
 
-Disconnect your coffee machine from mains voltage before doing any modifications!
+> [!DANGER]
+> **SAFETY WARNING:** Disconnect your coffee machine from mains voltage before attempting any modifications! Working with high voltage is dangerous.
 
-<img width="2374" height="1780" alt="image" src="https://github.com/user-attachments/assets/b2bef99c-e74c-4d39-bb34-1229ab425327" />
-After SMT service from JLCPCB the PCBs should arrive in the following condition. Several of the small SMD parts still needs manual soldering.
-<img width="1336" height="1780" alt="image" src="https://github.com/user-attachments/assets/12f04637-929b-4e32-97e9-930ab41f4924" />
-Finished assembled controller board. Please ignore the dodgy soldering :) (I don't have hot air station yet). The LM1830 chip uand the AQV212 chip is socketed. For this specific board I also socketed the Arduino Nano (because during testing I destroyed too many), but beware of limited vertical space. Mil-max (low profile) sockets work.
-<img width="1336" height="1780" alt="image" src="https://github.com/user-attachments/assets/1e37c6e1-696d-41fc-987f-07d94724000b" />
-Finished assembled HV-board. In order to have enough vertical space it might be necessary to cut down the heatspreader on the TRIAC a bit. I suggest to first solder all the missing SMD parts (Fuse) before soldering the Relais and the power supply
-<img width="1336" height="1780" alt="image" src="https://github.com/user-attachments/assets/f11d798c-b8f2-4f87-a943-a14a00daa7bc" />
-Bottom view of repurposed Gicar box. All the connectors should fit neatly through the existing holes as is shown here. 
-<img width="1336" height="1780" alt="image" src="https://github.com/user-attachments/assets/999779a8-40dc-4ba7-b476-8f0ee90f952a" />
-Bottom view of repurposed Gicar box. All the connectors should fit neatly through the existing holes as is shown here. 
+## Phase 1: PCB Assembly
 
-(the following three pictures are only relevant if pressure transducer is to be installed)
+### 1. Receive and Inspect Boards
+[<img src="https://github.com/user-attachments/assets/b2bef99c-e74c-4d39-bb34-1229ab425327" width="450" alt="PCBs as arrived from factory">](https://github.com/user-attachments/assets/b2bef99c-e74c-4d39-bb34-1229ab425327)
 
-<img width="2374" height="1780" alt="image" src="https://github.com/user-attachments/assets/bf58da85-ba2a-4dcf-aa4a-16d0d0918a21" />
-Replace the existing transparent silicone tube with your 5mm polyurethane tube (food grade). Tie your pressure transducer into the circuit as shown in the picture.
-<img width="2374" height="1780" alt="image" src="https://github.com/user-attachments/assets/be84fa4f-fe3a-4688-a5c8-f4e108196a9e" />
-Unplug the brown (i.e. the live) wire from the pump and instead connect your own wire to it. This wire will then connect to the modified Gicar box (see following pictures).  
+If you ordered SMT assembly (e.g., from JLCPCB), your boards should arrive in the condition shown above. Note that several small SMD parts will still require manual soldering.
 
+### 2. Controller Board Assembly
+[<img src="https://github.com/user-attachments/assets/12f04637-929b-4e32-97e9-930ab41f4924" width="450" alt="Assembled controller board">](https://github.com/user-attachments/assets/12f04637-929b-4e32-97e9-930ab41f4924)
+Above is the fully assembled controller board. 
+
+**Key Assembly Notes:**
+* **Socketing:** The **LM1830** chip and the **AQV212** chip can be socketed as shown in the picture.
+* **Arduino Nano:** In the picture the Arduino Nano is also socketed (too many have been destroyed during testing), but be mindful about vertical space constraints. Standard headers are too tall. Use **Mil-max (low profile) sockets** to ensure the board fits inside the housing.
+* *(Please ignore the "dodgy" soldering in the reference photo—a hot air station is recommended for cleaner results!)*
+
+### 3. HV-Board Assembly
+[<img src="https://github.com/user-attachments/assets/1e37c6e1-696d-41fc-987f-07d94724000b" width="450" alt="Assembled HV board">](https://github.com/user-attachments/assets/1e37c6e1-696d-41fc-987f-07d94724000b)
+Above is the fully assembled High Voltage (HV) board.
+
+**Key Assembly Notes:**
+* **Heatspreader:** You may need to trim/cut down the heatspreader on the **TRIAC** to ensure there is enough vertical clearance within the enclosure.
+* **Order of Operations:** It is highly suggested to solder all missing SMD parts (such as the Fuse) **before** soldering the bulky components like the Relays and the Power Supply.
+
+---
+
+## Phase 2: Housing & Preparation
+
+### 4. Gicar Box Retrofit
+[<img src="https://github.com/user-attachments/assets/f11d798c-b8f2-4f87-a943-a14a00daa7bc" width="450" alt="Gicar box bottom view 1">](https://github.com/user-attachments/assets/f11d798c-b8f2-4f87-a943-a14a00daa7bc)
+[<img src="https://github.com/user-attachments/assets/999779a8-40dc-4ba7-b476-8f0ee90f952a" width="450" alt="Gicar box bottom view 2">](https://github.com/user-attachments/assets/999779a8-40dc-4ba7-b476-8f0ee90f952a)
+
+Repurpose the existing Gicar control box. As shown in the bottom views above, all connectors should fit neatly through the existing holes without modification to the plastic.
+
+---
+
+## Phase 3: Pressure Transducer (Optional)
+
+*Note: The following three steps are only relevant if you are installing the optional pressure transducer.*
+
+### 5. Tubing Installation
+[<img src="https://github.com/user-attachments/assets/a6955f76-337c-45ba-98c9-09f81a4d1a6b" width="450" alt="Transducer molex connector">](https://github.com/user-attachments/assets/a6955f76-337c-45ba-98c9-09f81a4d1a6b)
+
+Replace the existing transparent silicone tube with a **5mm polyurethane tube (food grade)**. Tie your pressure transducer into the circuit as shown in the image.
+
+### 6. Pump Wiring Modification
+[<img src="https://github.com/user-attachments/assets/bf58da85-ba2a-4dcf-aa4a-16d0d0918a21" width="450" alt="Pressure transducer tubing">](https://github.com/user-attachments/assets/bf58da85-ba2a-4dcf-aa4a-16d0d0918a21)
+[<img src="https://github.com/user-attachments/assets/be84fa4f-fe3a-4688-a5c8-f4e108196a9e" width="450" alt="Pump wiring modification">](https://github.com/user-attachments/assets/be84fa4f-fe3a-4688-a5c8-f4e108196a9e)
+
+1.  Unplug the **Brown** (Live) wire from the pump.
+2.  Connect your own custom wire to the pump's Live terminal instead.
+3.  This new wire will connect to the modified Gicar box (detailed in Phase 4).
+
+### 7. Transducer Connection
 <img width="1336" height="1780" alt="image" src="https://github.com/user-attachments/assets/a6955f76-337c-45ba-98c9-09f81a4d1a6b" />
-The pressure transducer gets a molex connector that has its mate at the controller board. 
-<img width="1336" height="1780" alt="image" src="https://github.com/user-attachments/assets/f80dea4b-8075-4388-870e-5d993e090e9b" />
-Connect the Faston tabs in the following way. Note that the printed schematic on the Gicar box is not correct anymore and the order is slightly different! The order is 230V Live wire - 230V Neutral wire, pump live wire, custom pump dimmer wire (the cable you made yourself), coffee relai live wire.
-<img width="1336" height="1780" alt="image" src="https://github.com/user-attachments/assets/bd423a37-a7bf-4c6d-bf0a-2b3288f16874" />
-on the top of the controller board, connect the existing connectors as shown in the picture. The order is: Boiler temperature sensor, Boiler fill sensor, Heater SSR relay, Brew lever sensor
 
+Terminate the pressure transducer wires with a Molex connector. This will mate with the corresponding header on the controller board.
 
-<img width="1336" height="1780" alt="image" src="https://github.com/user-attachments/assets/db68a03c-02f9-4e8a-b33e-5b859a19b8ac" />
-Bottom low voltage connectors. Order is Water level sensor tank - Heatexchanger temperature sensor, LEDs and switch sensors, custom pressure transducer, and custom scale cable (install is explained in tray scale repo)
-<img width="1336" height="1780" alt="image" src="https://github.com/user-attachments/assets/c3b830b4-7888-44e8-86a4-bd78d6e86eda" />
+---
 
+## Phase 4: Final Wiring
 
+### 8. High Voltage (Faston) Connections
+[<img src="https://github.com/user-attachments/assets/db68a03c-02f9-4e8a-b33e-5b859a19b8ac" width="450" alt="Bottom controller connections">](https://github.com/user-attachments/assets/db68a03c-02f9-4e8a-b33e-5b859a19b8ac)
+Connect the Faston tabs to the Gicar box.
+
+> [!WARNING]
+> **Important:** The original schematic printed on the Gicar box plastic is **NO LONGER CORRECT**. You must follow the new pinout order below.
+
+**Pinout Order (Left to Right / as shown):**
+1.  **230V Live Wire**
+2.  **230V Neutral Wire**
+3.  **Pump Live Wire**
+4.  **Custom Pump Dimmer Wire** (The cable you created in Step 6)
+5.  **Coffee Relay Live Wire**
+
+### 9. Top Controller Connections
+[<img src="https://github.com/user-attachments/assets/f80dea4b-8075-4388-870e-5d993e090e9b" width="450" alt="Gicar box Faston connections">](https://github.com/user-attachments/assets/f80dea4b-8075-4388-870e-5d993e090e9b)
+On the top side of the controller board, connect the existing machine connectors in the following order:
+
+* **Boiler Temperature Sensor**
+* **Boiler Fill Sensor**
+* **Heater SSR Relay**
+* **Brew Lever Sensor**
+
+### 10. Bottom Controller Connections (Low Voltage)
+[<img src="https://github.com/user-attachments/assets/c3b830b4-7888-44e8-86a4-bd78d6e86eda" width="450" alt="Final assembly view">](https://github.com/user-attachments/assets/c3b830b4-7888-44e8-86a4-bd78d6e86eda)
+Connect the low voltage peripherals to the bottom of the board in the following order:
+
+* **Water Level Sensor (Tank)**
+* **Heat Exchanger (HX) Temperature Sensor**
+* **LEDs and Switch Sensors**
+* **Custom Pressure Transducer**
+* **Custom Scale Cable** *(Refer to the separate Tray Scale repository for scale installation instructions)*
