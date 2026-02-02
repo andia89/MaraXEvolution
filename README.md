@@ -16,7 +16,7 @@ This repository contains the hardware design and firmware for the **MaraX Evolut
 
 ### Profiling & Extraction
 * **Pressure Profiling:** Real-time pump dimmer control via Zero-Cross detection.
-* **Flow Profiling:** (Requires Scale) Target specific flow rates (g/s) using Kalman-filtered weight data.
+* **Flow Profiling:** (Requires [MaraX Evolution Scale](https://github.com/andia89/MaraXEvolution-Scale/)) Target specific flow rates (g/s) using Kalman-filtered weight data.
 * **Advanced Profiles:** Supports manual control, flat 9-bar shots, or complex JSON-based profiles (Ramped or Stepped).
 
 ### Integration & Connectivity
