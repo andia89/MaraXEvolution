@@ -1,8 +1,6 @@
 # MaraX Evolution - Main Controller
 
 [<img src="https://github.com/user-attachments/assets/aa3f5071-2165-40e5-ae51-54051c40426c" width="450" alt="">](https://github.com/user-attachments/assets/aa3f5071-2165-40e5-ae51-54051c40426c)
-[<img src="https://github.com/user-attachments/assets/555c35d3-d3c9-4aa0-847c-5c848948d317" width="450" alt="">](https://github.com/user-attachments/assets/555c35d3-d3c9-4aa0-847c-5c848948d317)
-
 
 This repository contains the hardware design and firmware for the **MaraX Evolution** main controller board. This project is designed to replace the stock controller of the Lelit Mara X espresso machine, adding advanced features such as PID temperature control, pressure profiling, weighing scale integration, and WiFi connectivity.
 
