@@ -1,9 +1,9 @@
 // =================================================================
 // --- USER CONFIGURATION & DEFINES ---
 // =================================================================
-#define HAS_PRESSURE_GAUGE
-#define HAS_SCALE
-#define HAS_SCREEN
+// #define HAS_PRESSURE_GAUGE
+// #define HAS_SCALE
+// #define HAS_SCREEN
 
 // =================================================================
 // --- LIBRARIES ---

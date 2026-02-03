@@ -43,12 +43,13 @@ This repository contains the hardware design and firmware for the **MaraX Evolut
 
 ## Firmware Compilation
 
-The firmware is modular. You can enable/disable hardware features in `main.cpp` or via `platformio.ini` build flags:
+The firmware is modular. You can enable/disable hardware features via `platformio.ini` build flags:
 
 ```cpp
-#define HAS_PRESSURE_GAUGE // Enables Pump Dimming and Pressure Transducer
-#define HAS_SCALE          // Enables ADS1232 and Flow Profiling
-#define HAS_SCREEN         // Enables ESP-NOW for Nextion HMI
+build_flags = 
+    -D HAS_PRESSURE_GAUGE
+    -D HAS_SCALE
+    -D HAS_SCREEN
 ```
 
 The firmware is built using **PlatformIO**.
