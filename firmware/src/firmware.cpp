@@ -3047,6 +3047,20 @@ void runPumpProfile()
     }
   }
 
+  if (currentTargetY < 0.1f && (millis() - shotStartTime > 5000))
+  {
+    setPump(false);
+    setPumpPower(0);
+#ifdef HAS_PRESSURE_GAUGE
+    pressurePID.SetMode(MANUAL);
+    pumpOutput = 0;
+#endif
+#ifdef HAS_SCALE
+    flowPID.SetMode(MANUAL);
+#endif
+    return;
+  }
+
   if (usePID)
   {
     pumpSetpoint = (double)currentTargetY;
