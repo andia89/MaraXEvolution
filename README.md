@@ -70,6 +70,18 @@ The firmware is built using **PlatformIO**.
 
 ## Support me
 
+I had way too much fun building the MaraX Evolution—it turned into quite the obsession! I am definitely planning to tackle another coffee machine and give it the same "Evolution" treatment.
+
+**However, espresso machines are expensive! :D**
+
+If you enjoy this project or use it daily, please consider supporting me.
+
+**Your Support = Your Vote**
+
+When you support me on Ko-fi or Patreon, **please leave a comment telling me which coffee machine you want me to do next.**
+
+Think of it as a voting system: As soon as I have enough funds to cover the machine with the most votes (and the parts to mod it), I will buy it, reverse-engineer it, and build an open-source controller for it. If you have the MaraX and still want to support me, you can also tell me if there is a specific feature you want to have!
+
 ## Limitations
 * The MaraX is a very good heatexchanger machine, using quite sophisticated hardware to achieve superior temperature stability than a lot of other HX machines out of the box. It is, however, not a dual boiler machine and as such perfect temperature control is almost impossible. I played around a lot with PID values and was able to come up with some good values (and some pretty sophisticated feed forward control), but still perfect stability is almost impossible (or only if one tunes the PID super conservative, but then it takes hours to heat the machine)
 * This is not a cheap project. Most parts can be sourced pretty cheaply, but I used good ADC chips (the ADS1115) and one unfortunately obsolete LM1830 chip for boiler water level detection as well as a pretty expensive power supply for the 12V power. Most of these things could certainly be done cheaper (and maybe someday will). All in all expect to spend a bit of money if you go for the full set (which is recommended).
