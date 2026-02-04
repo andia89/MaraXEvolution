@@ -16,6 +16,7 @@ This repository contains the hardware design and firmware for the **MaraX Evolut
 * **Hybrid Thermal Control:** Utilizes a custom **Feed-Forward + PID algorithm** (`feedForwardHeater`) that estimates heat loss based on ambient vs. boiler temperature, offering better stability than standard PIDs.
 * **Dual-PID Architecture:** Dedicated PID loops for Temperature (Boiler/HX) and Pump (Pressure/Flow).
 * **Smart State Machine:** Manages states including `COOLING_FLUSH`, `STEAM_BOOST`, and `STANDBY`.
+* Performs all tasks the original Lelit MaraX machine does as well (boiler refill, water tank presence detection, relay activations etc...)
 
 ### Profiling & Extraction
 * **Pressure Profiling:** Real-time pump dimmer control via Zero-Cross detection.
