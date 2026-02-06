@@ -9,7 +9,7 @@
 ### Videos
 | [<img src="https://github.com/user-attachments/assets/e681b708-b621-4cd1-969d-cbfb5e469f87" height="400">](https://github.com/user-attachments/assets/e88c7372-fec7-41ba-ae10-4c3a202e55e9) | [<img src="https://github.com/user-attachments/assets/5358e4d0-2b67-4217-8e4f-33426ae74307" height="400">](https://github.com/user-attachments/assets/11aead3c-08d9-41a0-b3eb-2458ce605d03) |
 |:--:| :--:| 
-| * Pressure profiling with a blind flange. The pressure follows a complicated profile * |* Real shot with the custom Controller. The profile is set to produce a flat 9bar shot that stops at 44g. As one can see the pressure neatly follows the 9bar (at one point I adjusted with the flow control paddle so that is when the pressure dropped). The grind was way to fine for this shot :D * |
+| *Pressure profiling with a blind flange. The pressure follows a complicated profile* | *Real shot with the custom Controller. The profile is set to produce a flat 9bar shot that stops at 44g. As one can see the pressure neatly follows the 9bar (at one point I adjusted with the flow control paddle so that is when the pressure dropped). The grind was way to fine for this shot :D* |
 
 
 
