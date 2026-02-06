@@ -3,8 +3,10 @@
 ![Platform](https://img.shields.io/badge/platform-ESP32-green)
 ![Status](https://img.shields.io/badge/status-active-success)
 
+### Screenshot
 [<img src="https://github.com/user-attachments/assets/aa3f5071-2165-40e5-ae51-54051c40426c" width="450" alt="">](https://github.com/user-attachments/assets/aa3f5071-2165-40e5-ae51-54051c40426c)
 
+### Videos
 [<img src="https://github.com/user-attachments/assets/e681b708-b621-4cd1-969d-cbfb5e469f87" height="400">](https://github.com/user-attachments/assets/e88c7372-fec7-41ba-ae10-4c3a202e55e9)
 [<img src="https://github.com/user-attachments/assets/5358e4d0-2b67-4217-8e4f-33426ae74307" height="400">](https://github.com/user-attachments/assets/11aead3c-08d9-41a0-b3eb-2458ce605d03)
 
