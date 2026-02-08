@@ -2036,6 +2036,7 @@ void handleStateEntry(MachineState newState)
 
   case COOLING_FLUSH:
     setBoilerFillValve(false);
+    setPumpPower(100);
     setPump(true);
     flushStartTime = millis();
     break;
@@ -2083,6 +2084,7 @@ void handleStateEntry(MachineState newState)
     break;
 
   case CLEANING_PUMPING:
+    setPumpPower(100);
     setPump(true);
     setBoilerFillValve(false);
     cleaningPumpStartTime = millis();
