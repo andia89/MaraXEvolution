@@ -3039,7 +3039,7 @@ void runPumpProfile()
 #ifdef HAS_SCALE
     if (strcmp(profilingTarget, "weight") == 0)
     {
-      currentX = currentWeight;
+      currentX = max(0.0f, currentWeight);
       usePID = true;
     }
 #endif
