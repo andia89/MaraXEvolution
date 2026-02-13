@@ -4636,7 +4636,16 @@ void loop()
       }
       else
       {
-        transitionToState(HEATING);
+        bool heatingModeCoffee = strcmp(brewMode, "STEAM");
+
+        if (!heatingModeCoffee)
+        {
+          transitionToState(IDLE);
+        }
+        else
+        {
+          transitionToState(HEATING);
+        }
       }
     }
     break;
@@ -4645,7 +4654,16 @@ void loop()
     runHeaterPID();
     if (nowTime - steamBoostEntryTime >= STEAM_BOOST_DURATION_MS)
     {
-      transitionToState(HEATING);
+      bool heatingModeCoffee = strcmp(brewMode, "STEAM");
+
+      if (!heatingModeCoffee)
+      {
+        transitionToState(IDLE);
+      }
+      else
+      {
+        transitionToState(HEATING);
+      }
     }
     break;
   }
