@@ -323,7 +323,6 @@ unsigned long boilerFullTimestamp = 0;
 unsigned long steamBoostEntryTime = 0;
 long coolingFlushEndTime = 0;
 unsigned long programmaticFlushEndTime = 0;
-bool skipCoolingFlush = false;
 
 // Timer to track post-shot dripping
 unsigned long shotEndTime = 0;
@@ -4551,13 +4550,12 @@ void loop()
     }
     setBoilerFillValve(false);
     setPump(false);
-    if (isStable())
+    if ((nowTime - lastStateTransitionTime > 10000) && isStable())
     {
       bool heatingModeCoffee = strcmp(brewMode, "STEAM");
 
-      if (heatingModeCoffee || skipCoolingFlush)
+      if (heatingModeCoffee)
       {
-        skipCoolingFlush = false;
         printlnToAll("Temperature stable -> IDLE.");
         transitionToState(IDLE);
       }
@@ -4642,7 +4640,6 @@ void loop()
       else
       {
         transitionToState(HEATING);
-        skipCoolingFlush = true;
       }
     }
     break;
@@ -4652,7 +4649,6 @@ void loop()
     if (nowTime - steamBoostEntryTime >= STEAM_BOOST_DURATION_MS)
     {
       transitionToState(HEATING);
-      skipCoolingFlush = true;
     }
     break;
   }
@@ -4747,7 +4743,6 @@ void loop()
         cleaningStateToResume = IDLE;
 
         transitionToState(HEATING);
-        skipCoolingFlush = true;
       }
       else
       {
