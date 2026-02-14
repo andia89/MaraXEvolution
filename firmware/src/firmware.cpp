@@ -323,6 +323,7 @@ unsigned long boilerFullTimestamp = 0;
 unsigned long steamBoostEntryTime = 0;
 long coolingFlushEndTime = 0;
 unsigned long programmaticFlushEndTime = 0;
+bool skipCoolingFlush = false;
 
 // Timer to track post-shot dripping
 unsigned long shotEndTime = 0;
@@ -4554,8 +4555,9 @@ void loop()
     {
       bool heatingModeCoffee = strcmp(brewMode, "STEAM");
 
-      if (heatingModeCoffee)
+      if (heatingModeCoffee || skipCoolingFlush)
       {
+        skipCoolingFlush = false;
         printlnToAll("Temperature stable -> IDLE.");
         transitionToState(IDLE);
       }
@@ -4639,16 +4641,8 @@ void loop()
       }
       else
       {
-        bool heatingModeCoffee = strcmp(brewMode, "STEAM");
-
-        if (!heatingModeCoffee)
-        {
-          transitionToState(IDLE);
-        }
-        else
-        {
-          transitionToState(HEATING);
-        }
+        transitionToState(HEATING);
+        skipCoolingFlush = true;
       }
     }
     break;
@@ -4657,16 +4651,8 @@ void loop()
     runHeaterPID();
     if (nowTime - steamBoostEntryTime >= STEAM_BOOST_DURATION_MS)
     {
-      bool heatingModeCoffee = strcmp(brewMode, "STEAM");
-
-      if (!heatingModeCoffee)
-      {
-        transitionToState(IDLE);
-      }
-      else
-      {
-        transitionToState(HEATING);
-      }
+      transitionToState(HEATING);
+      skipCoolingFlush = true;
     }
     break;
   }
@@ -4760,16 +4746,8 @@ void loop()
         cleaningRepetitionCounter = 0;
         cleaningStateToResume = IDLE;
 
-        bool heatingModeCoffee = strcmp(brewMode, "STEAM");
-
-        if (!heatingModeCoffee)
-        {
-          transitionToState(IDLE);
-        }
-        else
-        {
-          transitionToState(HEATING);
-        }
+        transitionToState(HEATING);
+        skipCoolingFlush = true;
       }
       else
       {
