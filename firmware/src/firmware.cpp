@@ -4344,6 +4344,9 @@ void setup()
   updateBrewMode();
   updateTempSwitch();
   updateSensorReadings();
+#ifdef HAS_SCALE
+  tareScale();
+#endif
 
   waterLevelTripped = !readPin(WATER_DETECTOR);
   isBoilerEmpty = !detectBoilerLevel();
