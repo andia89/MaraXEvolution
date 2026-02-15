@@ -22,6 +22,7 @@
 #include <DNSServer.h>
 #include <WebServer.h>
 #include <WiFiManager.h>
+#include <nvs_flash.h>
 #ifdef HAS_SCREEN
 #include <esp_now.h>
 #endif
@@ -142,6 +143,7 @@ const char *mqtt_topic_set_profiling_source = "espresso/settings/status/profilin
 const char *mqtt_topic_set_profiling_target = "espresso/settings/status/profiling_target";
 const char *mqtt_topic_profile_data = "espresso/settings/status/profile_data";
 const char *mqtt_topic_profile_flat = "espresso/settings/status/profiling_flat_value";
+const char *mqtt_topic_active_profile_id = "espresso/settings/status/active_profile_id";
 
 const char *mqtt_topic_set_kp_pressure = "espresso/settings/status/kp_pressure";
 const char *mqtt_topic_set_ki_pressure = "espresso/settings/status/ki_pressure";
@@ -208,6 +210,7 @@ char espNowMessageBuffer[MAX_ESPNOW_BUFFER] = {0}; // Initialize with nulls
 int espNowCurrentLength = 0;
 const unsigned long ESP_NOW_SEND_INTERVAL_MS = 250;
 static unsigned long lastEspNowSendTime = 0;
+volatile bool espNowBusy = false;
 #endif
 #ifdef HAS_SCALE
 // =================================================================
@@ -268,7 +271,8 @@ unsigned long shotStartTime = 0;
 // --- FLOW PROFILING ---
 // =================================================================
 
-#define MAX_PROFILE_STEPS 32
+#define MAX_PROFILE_STEPS 16
+#define MAX_PROFILES 20
 
 struct ProfileStep
 {
@@ -276,15 +280,19 @@ struct ProfileStep
   float setpoint; // Y-axis value (Pressure in bar OR Flow in g/s)
 };
 
-struct EspressoProfile
+struct __attribute__((packed)) EspressoProfile
 {
+  uint8_t id;
   char name[65];
   bool isStepped;
   uint8_t numSteps;
   ProfileStep steps[MAX_PROFILE_STEPS];
 };
 
-EspressoProfile currentProfile;
+EspressoProfile profiles[MAX_PROFILES];
+
+EspressoProfile *currentProfile = &profiles[0];
+uint8_t currentProfileIndex = 0;
 
 int numProfilePoints = 0;
 
@@ -505,6 +513,7 @@ void handleTelnet();
 void onMqttMessage(char *topic, char *payload, AsyncMqttClientMessageProperties properties, size_t len, size_t index, size_t total);
 void onMqttConnect(bool sessionPresent);
 void onMqttDisconnect(AsyncMqttClientDisconnectReason reason);
+void saveProfile(int index);
 void handleIncomingSetting(char *message);
 #ifdef HAS_SCREEN
 void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len);
@@ -588,11 +597,11 @@ bool isProgrammaticFlushActive();
 void startProgrammaticFlush(unsigned long duration);
 
 // --- Settings & Configuration ---
-void saveSettings();
+void saveSettings(const char *key);
 void loadSettings();
 void publishSettings();
 void publishSingleSetting(const char *key, bool forceFlush = true);
-void publishProfile();
+void publishAllProfiles();
 void publishState();
 void generateSparseMap();
 void setup();
@@ -916,10 +925,7 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len)
 
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
 {
-  if (status != ESP_NOW_SEND_SUCCESS)
-  {
-    printlnToAll("ESP-NOW message failed to send.");
-  }
+  espNowBusy = false;
 }
 
 void sendEspNowBuffer()
@@ -934,29 +940,34 @@ void sendEspNowBuffer()
     return;
   }
 
+  if (espNowBusy)
+  {
+    unsigned long waitStart = millis();
+    while (espNowBusy)
+    {
+      if (millis() - waitStart > 50)
+      {
+        espNowBusy = false;
+        break;
+      }
+      yield();
+    }
+  }
   struct_message espnow_message;
   strncpy(espnow_message.payload, espNowMessageBuffer, sizeof(espnow_message.payload) - 1);
   espnow_message.payload[sizeof(espnow_message.payload) - 1] = '\0';
+  espNowBusy = true;
 
-  esp_err_t result = ESP_FAIL;
-  int attempts = 0;
-  const int MAX_RETRIES = 3;
-
-  while (result != ESP_OK && attempts <= MAX_RETRIES)
-  {
-    if (attempts > 0)
-    {
-      delay(10);
-    }
-    result = esp_now_send(screenMacAddress, (uint8_t *)&espnow_message, sizeof(espnow_message));
-    attempts++;
-  }
+  esp_err_t result = esp_now_send(screenMacAddress, (uint8_t *)&espnow_message, sizeof(espnow_message));
 
   if (result != ESP_OK)
   {
-    printToAll("ERROR: ESP-NOW failed code: ");
+    espNowBusy = false;
+
+    printToAll("Error: ESP-NOW Send Failed Code: ");
     printlnToAll(result);
   }
+
   espNowCurrentLength = 0;
   espNowMessageBuffer[0] = '\0';
 }
@@ -1160,26 +1171,90 @@ void handleIncomingSetting(char *message)
     profilingFlatValue = atof(value);
     settingsChanged = true;
   }
+  else if (strcasecmp(key, "active_profile_id") == 0)
+  {
+    int newIndex = atoi(value);
+    if (newIndex >= 0 && newIndex < MAX_PROFILES)
+    {
+      currentProfileIndex = newIndex;
+      currentProfile = &profiles[currentProfileIndex];
+
+      // Reset shot tracking
+      currentProfileStepIndex = 0;
+      currentStepStartX = 0.0f;
+
+      printToAll("Active profile switched to ID: ");
+      printlnToAll(currentProfileIndex);
+      settingsChanged = true;
+    }
+  }
   else if (strcasecmp(key, "profile_data") == 0)
   {
-    printlnToAll("Parsing new profile JSON...");
+    printlnToAll("Parsing profile update...");
     JsonDocument doc;
     DeserializationError error = deserializeJson(doc, value);
+
     if (!error)
     {
-      strlcpy(currentProfile.name, doc["n"] | "Imported", sizeof(currentProfile.name));
-      currentProfile.isStepped = (doc["m"] == 1);
-      JsonArray steps = doc["s"];
-      currentProfile.numSteps = 0;
-      for (JsonVariant step : steps)
+      int id = doc["id"] | -1;
+
+      if (id >= 0 && id < MAX_PROFILES)
       {
-        if (currentProfile.numSteps >= MAX_PROFILE_STEPS)
-          break;
-        currentProfile.steps[currentProfile.numSteps].setpoint = step[0].as<float>();
-        currentProfile.steps[currentProfile.numSteps].trigger = step[1].as<float>();
-        currentProfile.numSteps++;
+        const char *newName = doc["n"] | "";
+
+        if (strlen(newName) == 0)
+        {
+          profiles[id].id = id;
+          profiles[id].numSteps = 0;
+          profiles[id].name[0] = '\0';
+          profiles[id].isStepped = false;
+        }
+        else
+        {
+          profiles[id].id = id;
+          strlcpy(profiles[id].name, newName, sizeof(profiles[id].name));
+          profiles[id].isStepped = (doc["m"] == 1);
+
+          JsonArray steps = doc["s"];
+          profiles[id].numSteps = 0;
+          for (JsonVariant step : steps)
+          {
+            if (profiles[id].numSteps >= MAX_PROFILE_STEPS)
+              break;
+            profiles[id].steps[profiles[id].numSteps].setpoint = step[0].as<float>();
+            profiles[id].steps[profiles[id].numSteps].trigger = step[1].as<float>();
+            profiles[id].numSteps++;
+          }
+          printlnToAll("Profile slot updated.");
+        }
+        if (id == currentProfileIndex)
+        {
+          currentProfile = &profiles[currentProfileIndex];
+        }
+        saveProfile(id);
+        JsonDocument outDoc;
+        outDoc["id"] = profiles[id].id;
+        outDoc["n"] = profiles[id].name;
+        outDoc["m"] = profiles[id].isStepped ? 1 : 0;
+
+        JsonArray outSteps = outDoc["s"].to<JsonArray>();
+        for (int i = 0; i < profiles[id].numSteps; i++)
+        {
+          JsonArray step = outSteps.add<JsonArray>();
+          step.add(profiles[id].steps[i].setpoint);
+          step.add(profiles[id].steps[i].trigger);
+        }
+
+        char outBuffer[1024];
+        serializeJson(outDoc, outBuffer, sizeof(outBuffer));
+
+        printlnToAll("Syncing updated profile to network...");
+        publishData(mqtt_topic_profile_data, outBuffer, true);
       }
-      settingsChanged = true;
+      else
+      {
+        printlnToAll("Error: Invalid Profile ID in JSON");
+      }
     }
     else
     {
@@ -1247,7 +1322,7 @@ void handleIncomingSetting(char *message)
 
   if (settingsChanged || connectionSettingsChanged)
   {
-    saveSettings();
+    saveSettings(key);
   }
   if (settingsChanged)
   {
@@ -1315,6 +1390,7 @@ void processCommand(char *command)
     printlnToAll("  status            - Prints system status.");
     printlnToAll("  exit              - Closes the Telnet connection.");
     printlnToAll("  reboot            - Restarts the device.");
+    printlnToAll("  factoryreset      - Performs a factory reset (clears WiFi and MQTT settings).");
     printlnToAll("  macaddress        - Prints WiFi MAC.");
     printlnToAll("  lasterror         - Shows last critical error.");
     printlnToAll("  debug             - Toggle DEBUG mode.");
@@ -1375,6 +1451,23 @@ void processCommand(char *command)
   {
     printlnToAll("Rebooting device...");
     delay(100);
+    ESP.restart();
+  }
+  else if (strcasecmp(cmd, "factoryreset") == 0)
+  {
+    printlnToAll("!!! WARNING !!!");
+    printlnToAll("Erasing ALL settings, profiles, and WiFi credentials...");
+    delay(1000);
+
+    nvs_flash_erase();
+    nvs_flash_init();
+
+    preferences.begin("espresso-app", false);
+    preferences.clear();
+    preferences.end();
+
+    printlnToAll("Erase Complete. Rebooting in 3 seconds...");
+    delay(3000);
     ESP.restart();
   }
   else if (strcasecmp(cmd, "exit") == 0)
@@ -1934,19 +2027,19 @@ void printStatus()
 
   printlnToAll("--- CURRENT PROFILE ---");
   printToAll("Name: ");
-  printlnToAll(currentProfile.name);
+  printlnToAll(currentProfile->name);
   printToAll("Type: ");
-  printlnToAll(currentProfile.isStepped ? "Stepped" : "Ramped");
+  printlnToAll(currentProfile->isStepped ? "Stepped" : "Ramped");
   printToAll("Steps: ");
-  printlnToAll(currentProfile.numSteps);
-  for (int i = 0; i < currentProfile.numSteps; i++)
+  printlnToAll(currentProfile->numSteps);
+  for (int i = 0; i < currentProfile->numSteps; i++)
   {
     printToAll("  Step ");
     printToAll(i);
     printToAll(": Target=");
-    printToAll(currentProfile.steps[i].setpoint, 1);
+    printToAll(currentProfile->steps[i].setpoint, 1);
     printToAll(", Trigger=");
-    printlnToAll(currentProfile.steps[i].trigger, 1);
+    printlnToAll(currentProfile->steps[i].trigger, 1);
   }
   printlnToAll("-----------------------");
 }
@@ -3137,12 +3230,12 @@ void runPumpProfile()
  */
 float getTargetAt(float currentX)
 {
-  if (currentProfile.numSteps == 0)
+  if (currentProfile->numSteps == 0)
     return 0.0f;
 
-  while (currentProfileStepIndex < currentProfile.numSteps)
+  while (currentProfileStepIndex < currentProfile->numSteps)
   {
-    ProfileStep &step = currentProfile.steps[currentProfileStepIndex];
+    ProfileStep &step = currentProfile->steps[currentProfileStepIndex];
 
     float stepDuration = step.trigger;
     float stepEndX = currentStepStartX + stepDuration;
@@ -3155,7 +3248,7 @@ float getTargetAt(float currentX)
       continue;
     }
 
-    if (currentProfile.isStepped)
+    if (currentProfile->isStepped)
     {
       return step.setpoint;
     }
@@ -3325,66 +3418,129 @@ void startProgrammaticFlush(unsigned long duration)
 // --- Settings & Configuration ---
 // ----------------------------------------------------------------
 
-void saveSettings()
+void saveProfile(int index)
 {
-  printlnToAll("Saving settings to flash memory...");
+  if (index < 0 || index >= MAX_PROFILES)
+    return;
+
   preferences.begin("espresso-app", false);
+  char key[10];
+  sprintf(key, "p_%d", index);
 
-  // --- Save Connection Settings ---
-  preferences.putString("mqttServer", mqtt_server);
-  preferences.putInt("mqttPort", mqtt_port);
-  preferences.putString("mqttUser", mqtt_user);
-  preferences.putString("mqttPass", mqtt_password);
-
-  if (ignoreTempSwitch)
-  {
-    preferences.putFloat("tempSetBrew", tempSetBrew);
-  }
-  preferences.putFloat("tempSetSteam", tempSetSteam);
-  preferences.putFloat("tempSetSteamB", tempSetSteamBoost);
-
-  preferences.putDouble("kp_temperature", kp_temperature);
-  preferences.putDouble("ki_temperature", ki_temperature);
-  preferences.putDouble("kd_temperature", kd_temperature);
-#ifdef HAS_PRESSURE_GAUGE
-  preferences.putDouble("kp_pressure", kp_pressure);
-  preferences.putDouble("ki_pressure", ki_pressure);
-  preferences.putDouble("kd_pressure", kd_pressure);
-#endif
-#ifdef HAS_SCALE
-  preferences.putDouble("kp_flow", kp_flow);
-  preferences.putDouble("ki_flow", ki_flow);
-  preferences.putDouble("kd_flow", kd_flow);
-
-  preferences.putFloat("flowKalmanMe", flowKalmanMe);
-  preferences.putFloat("flowKalmanE", flowKalmanE);
-  preferences.putFloat("flowKalmanQ", flowKalmanQ);
-  preferences.putFloat("weightKalmanMe", weightKalmanMe);
-  preferences.putFloat("weightKalmanE", weightKalmanE);
-  preferences.putFloat("weightKalmanQ", weightKalmanQ);
-#endif
-
-  // Save MQTT override states
-  if (ignoreBrewSwitch)
-  {
-    preferences.putString("brewMode", brewMode);
-  }
-  preferences.putBool("steamBoost", enableSteamBoost);
-#ifdef HAS_SCALE
-  preferences.putLong("scaleOffset", COMBINED_OFFSET);
-  preferences.putFloat("scaleScale", COMBINED_SCALE);
-#endif
-  preferences.putString("profMode", profilingMode);
-  preferences.putString("profSource", profilingSource);
-  preferences.putString("profTarget", profilingTarget);
-
-  preferences.putInt("prof_count", numProfilePoints);
-  preferences.putFloat("profFlatVal", profilingFlatValue);
-
-  preferences.putBytes("profile_blob", &currentProfile, sizeof(EspressoProfile));
+  size_t bytesWritten = preferences.putBytes(key, &profiles[index], sizeof(EspressoProfile));
 
   preferences.end();
-  printlnToAll("Settings saved.");
+
+  if (bytesWritten != sizeof(EspressoProfile))
+  {
+    printToAll("ERROR: Failed to save profile ");
+    printToAll(index);
+    printlnToAll(". NVS Partition might be full!");
+  }
+  else
+  {
+    printToAll("Saved profile index: ");
+    printlnToAll(index);
+  }
+}
+
+void saveSettings(const char *key)
+{
+  preferences.begin("espresso-app", false);
+
+  // --- Network & MQTT ---
+  if (strcasecmp(key, "mqtt_server") == 0)
+    preferences.putString("mqttServer", mqtt_server);
+  else if (strcasecmp(key, "mqtt_port") == 0)
+    preferences.putInt("mqttPort", mqtt_port);
+  else if (strcasecmp(key, "mqtt_user") == 0)
+    preferences.putString("mqttUser", mqtt_user);
+  else if (strcasecmp(key, "mqtt_password") == 0)
+    preferences.putString("mqttPass", mqtt_password);
+
+  // --- Temperatures & Modes ---
+  else if (strcasecmp(key, "tempsetbrew") == 0)
+  {
+    preferences.putFloat("tempSetBrew", tempSetBrew);
+    // We also save whether we are ignoring the physical switch
+    preferences.putBool("ignoreTempSw", ignoreTempSwitch);
+  }
+  else if (strcasecmp(key, "tempsetsteam") == 0)
+    preferences.putFloat("tempSetSteam", tempSetSteam);
+  else if (strcasecmp(key, "tempsetsteamboost") == 0)
+    preferences.putFloat("tempSetSteamB", tempSetSteamBoost);
+  else if (strcasecmp(key, "steamboost") == 0 || strcasecmp(key, "enablesteamboost") == 0)
+  {
+    preferences.putBool("steamBoost", enableSteamBoost);
+  }
+  else if (strcasecmp(key, "brewmode") == 0)
+  {
+    preferences.putString("brewMode", brewMode);
+    preferences.putBool("ignoreBrewSw", ignoreBrewSwitch);
+  }
+
+  // --- Temperature PID ---
+  else if (strcasecmp(key, "kp_temperature") == 0)
+    preferences.putDouble("kp_temperature", kp_temperature);
+  else if (strcasecmp(key, "ki_temperature") == 0)
+    preferences.putDouble("ki_temperature", ki_temperature);
+  else if (strcasecmp(key, "kd_temperature") == 0)
+    preferences.putDouble("kd_temperature", kd_temperature);
+
+#ifdef HAS_PRESSURE_GAUGE
+  // --- Pressure PID ---
+  else if (strcasecmp(key, "kp_pressure") == 0)
+    preferences.putDouble("kp_pressure", kp_pressure);
+  else if (strcasecmp(key, "ki_pressure") == 0)
+    preferences.putDouble("ki_pressure", ki_pressure);
+  else if (strcasecmp(key, "kd_pressure") == 0)
+    preferences.putDouble("kd_pressure", kd_pressure);
+#endif
+
+#ifdef HAS_SCALE
+  // --- Flow PID ---
+  else if (strcasecmp(key, "kp_flow") == 0)
+    preferences.putDouble("kp_flow", kp_flow);
+  else if (strcasecmp(key, "ki_flow") == 0)
+    preferences.putDouble("ki_flow", ki_flow);
+  else if (strcasecmp(key, "kd_flow") == 0)
+    preferences.putDouble("kd_flow", kd_flow);
+
+  // --- Kalman Filters ---
+  else if (strcasecmp(key, "flow_kalman_me") == 0)
+    preferences.putFloat("flowKalmanMe", flowKalmanMe);
+  else if (strcasecmp(key, "flow_kalman_e") == 0)
+    preferences.putFloat("flowKalmanE", flowKalmanE);
+  else if (strcasecmp(key, "flow_kalman_q") == 0)
+    preferences.putFloat("flowKalmanQ", flowKalmanQ);
+  else if (strcasecmp(key, "weight_kalman_me") == 0)
+    preferences.putFloat("weightKalmanMe", weightKalmanMe);
+  else if (strcasecmp(key, "weight_kalman_e") == 0)
+    preferences.putFloat("weightKalmanE", weightKalmanE);
+  else if (strcasecmp(key, "weight_kalman_q") == 0)
+    preferences.putFloat("weightKalmanQ", weightKalmanQ);
+
+  // --- Scale Calibration ---
+  else if (strcasecmp(key, "scale_cal") == 0)
+  {
+    preferences.putLong("scaleOffset", COMBINED_OFFSET);
+    preferences.putFloat("scaleScale", COMBINED_SCALE);
+  }
+#endif
+
+  // --- Profiling Logic ---
+  else if (strcasecmp(key, "profiling_mode") == 0)
+    preferences.putString("profMode", profilingMode);
+  else if (strcasecmp(key, "profiling_source") == 0)
+    preferences.putString("profSource", profilingSource);
+  else if (strcasecmp(key, "profiling_target") == 0)
+    preferences.putString("profTarget", profilingTarget);
+  else if (strcasecmp(key, "profiling_flat_value") == 0)
+    preferences.putFloat("profFlatVal", profilingFlatValue);
+  else if (strcasecmp(key, "active_profile_id") == 0)
+    preferences.putInt("curIdx", currentProfileIndex);
+
+  preferences.end();
 }
 
 void loadSettings()
@@ -3476,48 +3632,97 @@ void loadSettings()
   COMBINED_OFFSET = preferences.getLong("scaleOffset", 0);
   COMBINED_SCALE = preferences.getFloat("scaleScale", 1.0);
 #endif
-  if (preferences.isKey("profile_blob"))
+  currentProfileIndex = preferences.getInt("curIdx", 0);
+  if (currentProfileIndex >= MAX_PROFILES)
+    currentProfileIndex = 0;
+
+  bool foundAny = false;
+  size_t expectedSize = sizeof(EspressoProfile);
+
+  for (int i = 0; i < MAX_PROFILES; i++)
   {
-    preferences.getBytes("profile_blob", &currentProfile, sizeof(EspressoProfile));
+    char key[10];
+    sprintf(key, "p_%d", i);
+
+    size_t storedSize = preferences.getBytesLength(key);
+
+    if (storedSize == 0)
+    {
+      profiles[i].numSteps = 0;
+      continue;
+    }
+
+    if (storedSize == expectedSize)
+    {
+      preferences.getBytes(key, &profiles[i], expectedSize);
+      profiles[i].id = i;
+      if (profiles[i].numSteps > 0)
+        foundAny = true;
+    }
+    else
+    {
+      printToAll("Warning: Profile ");
+      printToAll(i);
+      printToAll(" size mismatch. Stored: ");
+      printToAll(storedSize);
+      printToAll(", Expected: ");
+      printlnToAll(expectedSize);
+
+      profiles[i].numSteps = 0;
+    }
   }
-  else
+  if (!foundAny)
   {
-    strcpy(currentProfile.name, "Standard Profile");
-    currentProfile.isStepped = true;
-    currentProfile.numSteps = 0;
+    currentProfileIndex = 0;
+    profiles[0].id = 0;
+    strcpy(profiles[0].name, "Standard Profile");
+    profiles[0].isStepped = false;
+    profiles[0].numSteps = 1;
+    profiles[0].steps[0] = {30.0, 9.0};
   }
 
+  currentProfile = &profiles[currentProfileIndex];
+
   printToAll("Profile loaded: ");
-  printToAll(currentProfile.name);
+  printToAll(currentProfile->name);
   printToAll(" (");
-  printToAll(currentProfile.numSteps);
+  printToAll(currentProfile->numSteps);
   printlnToAll(" steps)");
   preferences.end();
   printlnToAll("Settings loaded.");
 }
 
-void publishProfile()
+void publishAllProfiles()
 {
-  if (currentProfile.numSteps == 0)
+  char idxStr[5];
+  itoa(currentProfileIndex, idxStr, 10);
+  publishData(mqtt_topic_active_profile_id, idxStr, true, true);
+
+  for (int i = 0; i < MAX_PROFILES; i++)
   {
-    return;
+    if (profiles[i].numSteps > 0)
+    {
+      JsonDocument doc;
+      doc["id"] = i;
+      doc["n"] = profiles[i].name;
+      doc["m"] = profiles[i].isStepped ? 1 : 0;
+
+      JsonArray steps = doc["s"].to<JsonArray>();
+      for (int j = 0; j < profiles[i].numSteps; j++)
+      {
+        JsonArray step = steps.add<JsonArray>();
+        step.add(profiles[i].steps[j].setpoint);
+        step.add(profiles[i].steps[j].trigger);
+      }
+
+      char jsonBuffer[1024];
+      serializeJson(doc, jsonBuffer, sizeof(jsonBuffer));
+
+      publishData(mqtt_topic_profile_data, jsonBuffer, true, true);
+
+      delay(20);
+    }
   }
-  JsonDocument doc;
-
-  doc["n"] = currentProfile.name;
-  doc["m"] = currentProfile.isStepped ? 1 : 0;
-
-  JsonArray steps = doc["s"].to<JsonArray>();
-  for (int i = 0; i < currentProfile.numSteps; i++)
-  {
-    JsonArray step = steps.add<JsonArray>();
-    step.add(currentProfile.steps[i].setpoint);
-    step.add(currentProfile.steps[i].trigger);
-  }
-
-  char jsonBuffer[1024];
-  size_t n = serializeJson(doc, jsonBuffer, sizeof(jsonBuffer));
-  publishData(mqtt_topic_profile_data, jsonBuffer, true, true);
 }
 
 void publishSingleSetting(const char *key, bool forceFlush)
@@ -3653,6 +3858,11 @@ void publishSingleSetting(const char *key, bool forceFlush)
     dtostrf(profilingFlatValue, 4, 1, msgBuffer);
     publishData(mqtt_topic_profile_flat, msgBuffer, true, forceFlush);
   }
+  else if (strcasecmp(key, "active_profile_id") == 0)
+  {
+    itoa(currentProfileIndex, msgBuffer, 10);
+    publishData(mqtt_topic_active_profile_id, msgBuffer, true, forceFlush);
+  }
   else if (strcasecmp(key, "mqtt_server") == 0)
   {
     publishData(mqtt_topic_mqtt_server, mqtt_server, true, forceFlush);
@@ -3672,7 +3882,7 @@ void publishSingleSetting(const char *key, bool forceFlush)
   }
   else if (strcasecmp(key, "profile") == 0 || strcasecmp(key, "profile_data") == 0)
   {
-    publishProfile();
+    publishAllProfiles();
   }
   else
   {
@@ -3683,6 +3893,7 @@ void publishSingleSetting(const char *key, bool forceFlush)
 
 void publishSettings()
 {
+  printlnToAll("Publishing settings to MQTT...");
   static unsigned long lastPublishTime = 0;
   if (millis() - lastPublishTime < 5000)
     return;
@@ -3696,7 +3907,7 @@ void publishSettings()
   publishSingleSetting("mqtt_user", false);
   publishSingleSetting("mqtt_pass", true);
 
-  publishSingleSetting("profile");
+  publishAllProfiles();
 
   publishSingleSetting("tempsetbrew", false);
   publishSingleSetting("tempsetsteam", false);
@@ -4189,7 +4400,7 @@ void handleCalibrationStep(float weight)
     long reading_with_weight = getStableCombinedReadingADS1232(16);
     float scale_value = (float)(reading_with_weight - COMBINED_OFFSET) / calibrationWeight;
     COMBINED_SCALE = scale_value;
-    saveSettings();
+    saveSettings("scale_cal");
     printToAll("Weighing complete. New scale value: ");
     printlnToAll(scale_value, 4);
     printlnToAll("----------------------------------------------------");
