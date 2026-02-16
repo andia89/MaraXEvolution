@@ -1208,6 +1208,45 @@ void handleIncomingSetting(char *message)
           profiles[id].numSteps = 0;
           profiles[id].name[0] = '\0';
           profiles[id].isStepped = false;
+          if (id == currentProfileIndex)
+          {
+            printlnToAll("Active profile deleted! Searching for new active profile...");
+
+            int newIndex = 0;
+            bool foundNew = false;
+
+            for (int i = 0; i < MAX_PROFILES; i++)
+            {
+              if (i == id)
+                continue;
+
+              if (strlen(profiles[i].name) > 0)
+              {
+                newIndex = i;
+                foundNew = true;
+                break;
+              }
+            }
+
+            if (foundNew)
+            {
+              printToAll("Switching to first available profile: ID ");
+              printlnToAll(newIndex);
+            }
+            else
+            {
+              printlnToAll("No other profiles found. Reverting to ID 0 (Default).");
+            }
+
+            currentProfileIndex = newIndex;
+            currentProfile = &profiles[currentProfileIndex];
+
+            saveSettings("active_profile_id");
+
+            char idxStr[5];
+            itoa(currentProfileIndex, idxStr, 10);
+            publishData(mqtt_topic_active_profile_id, idxStr, true, true);
+          }
         }
         else
         {
