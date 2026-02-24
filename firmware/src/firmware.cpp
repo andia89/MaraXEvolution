@@ -3181,17 +3181,37 @@ void runPumpProfile()
     }
   }
 
-  if (currentTargetY < 0.1f && (millis() - shotStartTime > 5000))
+  bool hasFutureNonZero = false;
+  if (strcmp(profilingMode, "profile") == 0)
   {
-    setPump(false);
+    for (int i = currentProfileStepIndex; i < currentProfile->numSteps; i++)
+    {
+      if (currentProfile->steps[i].setpoint >= 0.1f)
+      {
+        hasFutureNonZero = true;
+        break;
+      }
+    }
+  }
+
+  if (currentTargetY < 0.1f)
+  {
     setPumpPower(0);
+
 #ifdef HAS_PRESSURE_GAUGE
     pressurePID.SetMode(MANUAL);
     pumpOutput = 0;
 #endif
 #ifdef HAS_SCALE
     flowPID.SetMode(MANUAL);
+    pumpOutput = 0;
 #endif
+
+    if (!hasFutureNonZero && (millis() - shotStartTime > 5000))
+    {
+      setPump(false);
+    }
+
     return;
   }
 
