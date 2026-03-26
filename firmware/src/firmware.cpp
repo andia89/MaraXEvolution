@@ -212,6 +212,7 @@ const unsigned long ESP_NOW_SEND_INTERVAL_MS = 250;
 static unsigned long lastEspNowSendTime = 0;
 volatile bool espNowBusy = false;
 #endif
+
 #ifdef HAS_SCALE
 // =================================================================
 // --- SCALE (ADS1232) CONFIGURATION & GLOBALS ---
@@ -261,11 +262,6 @@ float flowRate = 0.0f;
 float previousWeightForFlowCalc = 0.0f;
 unsigned long previousTimeForFlowCalc = 0;
 #endif
-// --- Profiling State Tracking ---
-int currentProfileStepIndex = 0;
-float currentStepStartX = 0.0f;
-float prevStepTargetY = 0.0f;
-unsigned long shotStartTime = 0;
 
 // =================================================================
 // --- FLOW PROFILING ---
@@ -285,8 +281,11 @@ struct __attribute__((packed)) EspressoProfile
   uint8_t id;
   char name[65];
   bool isStepped;
+  bool isTargetWeight; // false = time, true = weight
+  bool isSourceFlow;   // false = pressure, true = flow
   uint8_t numSteps;
   ProfileStep steps[MAX_PROFILE_STEPS];
+  int8_t nextProfileId; // Profile ID to run next (-1 for none)
 };
 
 EspressoProfile profiles[MAX_PROFILES];
@@ -295,6 +294,15 @@ EspressoProfile *currentProfile = &profiles[0];
 uint8_t currentProfileIndex = 0;
 
 int numProfilePoints = 0;
+
+// --- Profiling State Tracking ---
+int currentProfileStepIndex = 0;
+float currentStepStartX = 0.0f;
+float prevStepTargetY = 0.0f;
+unsigned long shotStartTime = 0;
+unsigned long profileStartTime = 0;
+float profileStartWeight = 0.0f;
+EspressoProfile *executingProfile = &profiles[0];
 
 // =================================================================
 // --- STATE MACHINE ---
@@ -399,6 +407,11 @@ bool sendRawDebugData = false;
 // --- Global Beep Variables ---
 unsigned long beepStopTime = 0;
 bool isBeeping = false;
+
+// --- Water Grace Period Variables ---
+const unsigned long LOW_WATER_GRACE_PERIOD_MS = 30000;
+bool lowWaterGracePeriodActive = false;
+unsigned long lowWaterGracePeriodStartTime = 0;
 
 // =================================================================
 // --- PID & HEATER CONTROL ---
@@ -1253,6 +1266,9 @@ void handleIncomingSetting(char *message)
           profiles[id].id = id;
           strlcpy(profiles[id].name, newName, sizeof(profiles[id].name));
           profiles[id].isStepped = (doc["m"] == 1);
+          profiles[id].isTargetWeight = (doc["tw"] == 1);
+          profiles[id].isSourceFlow = (doc["sf"] == 1);
+          profiles[id].nextProfileId = doc["nxt"] | -1;
 
           JsonArray steps = doc["s"];
           profiles[id].numSteps = 0;
@@ -1275,6 +1291,9 @@ void handleIncomingSetting(char *message)
         outDoc["id"] = profiles[id].id;
         outDoc["n"] = profiles[id].name;
         outDoc["m"] = profiles[id].isStepped ? 1 : 0;
+        outDoc["tw"] = profiles[id].isTargetWeight ? 1 : 0;
+        outDoc["sf"] = profiles[id].isSourceFlow ? 1 : 0;
+        outDoc["nxt"] = profiles[id].nextProfileId;
 
         JsonArray outSteps = outDoc["s"].to<JsonArray>();
         for (int i = 0; i < profiles[id].numSteps; i++)
@@ -2064,21 +2083,47 @@ void printStatus()
   printToAll(", Source=");
   printlnToAll(profilingSource);
 
-  printlnToAll("--- CURRENT PROFILE ---");
-  printToAll("Name: ");
-  printlnToAll(currentProfile->name);
+  printlnToAll("--- ACTIVE PROFILE ---");
+
+  EspressoProfile *printProf = (currentState == BREWING) ? executingProfile : currentProfile;
+
+  if (currentState == BREWING && executingProfile->id != currentProfile->id)
+  {
+    printlnToAll("(Currently executing a chained segment)");
+  }
+
+  printToAll("ID: ");
+  printToAll(printProf->id);
+  printToAll(" | Name: ");
+  printlnToAll(printProf->name);
+
   printToAll("Type: ");
-  printlnToAll(currentProfile->isStepped ? "Stepped" : "Ramped");
+  printToAll(printProf->isStepped ? "Stepped" : "Ramped");
+  printToAll(" | Target: ");
+  printToAll(printProf->isTargetWeight ? "Weight (g)" : "Time (s)");
+  printToAll(" | Source: ");
+  printlnToAll(printProf->isSourceFlow ? "Flow (PID)" : "Pressure (PID)");
+
+  if (printProf->nextProfileId >= 0)
+  {
+    printToAll("Chains to ID: ");
+    printlnToAll(printProf->nextProfileId);
+  }
+  else
+  {
+    printlnToAll("Chains to: None (Ends shot)");
+  }
+
   printToAll("Steps: ");
-  printlnToAll(currentProfile->numSteps);
-  for (int i = 0; i < currentProfile->numSteps; i++)
+  printlnToAll(printProf->numSteps);
+  for (int i = 0; i < printProf->numSteps; i++)
   {
     printToAll("  Step ");
     printToAll(i);
-    printToAll(": Target=");
-    printToAll(currentProfile->steps[i].setpoint, 1);
+    printToAll(": Setpoint=");
+    printToAll(printProf->steps[i].setpoint, 1);
     printToAll(", Trigger=");
-    printlnToAll(currentProfile->steps[i].trigger, 1);
+    printlnToAll(printProf->steps[i].trigger, 1);
   }
   printlnToAll("-----------------------");
 }
@@ -2185,10 +2230,17 @@ void handleStateEntry(MachineState newState)
   case BREWING:
     setBoilerFillValve(false);
     setPump(true);
+    executingProfile = currentProfile;
     currentProfileStepIndex = 0;
     currentStepStartX = 0.0f;
     prevStepTargetY = 0.0f;
     shotStartTime = millis();
+    profileStartTime = millis();
+    lowWaterGracePeriodActive = false;
+    lowWaterGracePeriodStartTime = 0;
+#ifdef HAS_SCALE
+    profileStartWeight = currentWeight;
+#endif
 #ifdef HAS_PRESSURE_GAUGE
     pressurePID.SetMode(MANUAL);
 #endif
@@ -2893,9 +2945,24 @@ void ledIdle()
 
 void ledBrew()
 {
-  digitalWrite(LEDWATER, HIGH);
   digitalWrite(LEDMAIN, HIGH);
   digitalWrite(LEDHEATER, HIGH);
+  if (lowWaterGracePeriodActive)
+  {
+    // Fast blink the water LED to warn the user they are on borrowed time!
+    static unsigned long lastBlinkTime = 0;
+    const int blinkInterval = 250;
+
+    if (millis() - lastBlinkTime > blinkInterval)
+    {
+      lastBlinkTime = millis();
+      digitalWrite(LEDWATER, !digitalRead(LEDWATER));
+    }
+  }
+  else
+  {
+    digitalWrite(LEDWATER, HIGH);
+  }
 }
 
 void ledStandby()
@@ -3074,11 +3141,13 @@ void runHeaterPID()
     }
     total_output = constrain(total_output, 0, 100);
 
-    if (mqttClient.connected())
+    static unsigned long lastPidOutputPublish = 0;
+    if (mqttClient.connected() && (millis() - lastPidOutputPublish >= 1000))
     {
       char termBuffer[10];
       dtostrf(total_output, 4, 3, termBuffer);
       publishData(mqtt_topic_pidoutput, termBuffer, false, true);
+      lastPidOutputPublish = millis();
     }
 
     unsigned long now = millis();
@@ -3161,35 +3230,66 @@ void runPumpProfile()
   }
   else if (strcmp(profilingMode, "profile") == 0)
   {
-    float currentX;
+    float currentX = 0.0f;
     usePID = false;
-    if (strcmp(profilingTarget, "time") == 0)
+
+    if (!executingProfile->isTargetWeight) // Target is Time
     {
-      currentX = (millis() - shotStartTime) / 1000.0f;
+      currentX = (millis() - profileStartTime) / 1000.0f;
       usePID = true;
     }
 #ifdef HAS_SCALE
-    if (strcmp(profilingTarget, "weight") == 0)
+    else // Target is Weight
     {
-      currentX = max(0.0f, currentWeight);
+      currentX = max(0.0f, currentWeight - profileStartWeight);
       usePID = true;
     }
 #endif
+
     if (usePID)
     {
       currentTargetY = getTargetAt(currentX);
+
+      // --- CHAINING LOGIC ---
+      int nextId = executingProfile->nextProfileId;
+      if (currentProfileStepIndex >= executingProfile->numSteps &&
+          nextId >= 0 &&
+          nextId < MAX_PROFILES &&
+          profiles[nextId].numSteps > 0) // <-- CRITICAL: Ensure target is not empty
+      {
+        printlnToAll("Profile segment complete. Chaining to next...");
+
+        executingProfile = &profiles[executingProfile->nextProfileId];
+
+        // Reset trackers for the next segment
+        currentProfileStepIndex = 0;
+        currentStepStartX = 0.0f;
+        profileStartTime = millis();
+#ifdef HAS_SCALE
+        profileStartWeight = currentWeight;
+#endif
+        // Recalculate immediately for a seamless transition
+        currentTargetY = getTargetAt(0.0f);
+      }
     }
   }
 
   bool hasFutureNonZero = false;
   if (strcmp(profilingMode, "profile") == 0)
   {
-    for (int i = currentProfileStepIndex; i < currentProfile->numSteps; i++)
+    if (executingProfile->nextProfileId >= 0)
     {
-      if (currentProfile->steps[i].setpoint >= 0.1f)
+      hasFutureNonZero = true; // Assume chained profiles keep it running
+    }
+    else
+    {
+      for (int i = currentProfileStepIndex; i < executingProfile->numSteps; i++)
       {
-        hasFutureNonZero = true;
-        break;
+        if (executingProfile->steps[i].setpoint >= 0.1f)
+        {
+          hasFutureNonZero = true;
+          break;
+        }
       }
     }
   }
@@ -3220,8 +3320,11 @@ void runPumpProfile()
     pumpSetpoint = (double)currentTargetY;
     bool controlActive = false;
 
+    // Flat mode resolves global strings; Profile mode uses the executing boolean
+    bool activeIsFlow = (strcmp(profilingMode, "flat") == 0) ? (strcmp(profilingSource, "flow") == 0) : executingProfile->isSourceFlow;
+
 #ifdef HAS_PRESSURE_GAUGE
-    if (strcmp(profilingSource, "pressure") == 0)
+    if (!activeIsFlow) // Source is Pressure
     {
 #ifdef HAS_SCALE
       if (flowPID.GetMode() != MANUAL)
@@ -3237,7 +3340,7 @@ void runPumpProfile()
 #endif
 
 #ifdef HAS_SCALE
-    if (!controlActive && strcmp(profilingSource, "flow") == 0)
+    if (!controlActive && activeIsFlow) // Source is Flow
     {
 #ifdef HAS_PRESSURE_GAUGE
       if (pressurePID.GetMode() != MANUAL)
@@ -3289,12 +3392,12 @@ void runPumpProfile()
  */
 float getTargetAt(float currentX)
 {
-  if (currentProfile->numSteps == 0)
+  if (executingProfile->numSteps == 0)
     return 0.0f;
 
-  while (currentProfileStepIndex < currentProfile->numSteps)
+  while (currentProfileStepIndex < executingProfile->numSteps)
   {
-    ProfileStep &step = currentProfile->steps[currentProfileStepIndex];
+    ProfileStep &step = executingProfile->steps[currentProfileStepIndex];
 
     float stepDuration = step.trigger;
     float stepEndX = currentStepStartX + stepDuration;
@@ -3307,20 +3410,17 @@ float getTargetAt(float currentX)
       continue;
     }
 
-    if (currentProfile->isStepped)
+    if (executingProfile->isStepped)
     {
       return step.setpoint;
     }
-
     else
     {
       if (stepDuration <= 0.001f)
         return step.setpoint;
 
       float ratio = (currentX - currentStepStartX) / stepDuration;
-
       ratio = constrain(ratio, 0.0f, 1.0f);
-
       return prevStepTargetY + ratio * (step.setpoint - prevStepTargetY);
     }
   }
@@ -3708,6 +3808,7 @@ void loadSettings()
     if (storedSize == 0)
     {
       profiles[i].numSteps = 0;
+      profiles[i].nextProfileId = -1;
       continue;
     }
 
@@ -3728,6 +3829,7 @@ void loadSettings()
       printlnToAll(expectedSize);
 
       profiles[i].numSteps = 0;
+      profiles[i].nextProfileId = -1;
     }
   }
   if (!foundAny)
@@ -3736,6 +3838,9 @@ void loadSettings()
     profiles[0].id = 0;
     strcpy(profiles[0].name, "Standard Profile");
     profiles[0].isStepped = false;
+    profiles[0].isTargetWeight = false;
+    profiles[0].isSourceFlow = false;
+    profiles[0].nextProfileId = -1;
     profiles[0].numSteps = 1;
     profiles[0].steps[0] = {30.0, 9.0};
   }
@@ -3765,6 +3870,9 @@ void publishAllProfiles()
       doc["id"] = i;
       doc["n"] = profiles[i].name;
       doc["m"] = profiles[i].isStepped ? 1 : 0;
+      doc["tw"] = profiles[i].isTargetWeight ? 1 : 0;
+      doc["sf"] = profiles[i].isSourceFlow ? 1 : 0;
+      doc["nxt"] = profiles[i].nextProfileId;
 
       JsonArray steps = doc["s"].to<JsonArray>();
       for (int j = 0; j < profiles[i].numSteps; j++)
@@ -4708,20 +4816,39 @@ void loop()
     }
     else if (waterLevelTripped)
     {
-      if (currentState != WATER_EMPTY)
+      // --- NEW GRACE PERIOD LOGIC ---
+      if (currentState == BREWING)
       {
-        if (currentState == CLEANING_START || currentState == CLEANING_PUMPING || currentState == CLEANING_PAUSE)
+        if (!lowWaterGracePeriodActive)
         {
-          cleaningStateToResume = currentState;
-          printlnToAll("Water empty during cleaning. Pausing cycle...");
+          lowWaterGracePeriodActive = true;
+          lowWaterGracePeriodStartTime = nowTime;
+          printlnToAll("Low water detected mid-shot! 30s grace period started.");
         }
-        else
+        else if (nowTime - lowWaterGracePeriodStartTime >= LOW_WATER_GRACE_PERIOD_MS)
         {
-          cleaningStateToResume = IDLE;
+          printlnToAll("Grace period expired! Aborting shot to protect pump.");
+          transitionToState(WATER_EMPTY);
+          errorState = true;
         }
       }
-      transitionToState(WATER_EMPTY);
-      errorState = true;
+      else
+      {
+        if (currentState != WATER_EMPTY)
+        {
+          if (currentState == CLEANING_START || currentState == CLEANING_PUMPING || currentState == CLEANING_PAUSE)
+          {
+            cleaningStateToResume = currentState;
+            printlnToAll("Water empty during cleaning. Pausing cycle...");
+          }
+          else
+          {
+            cleaningStateToResume = IDLE;
+          }
+        }
+        transitionToState(WATER_EMPTY);
+        errorState = true;
+      }
     }
     else if (isBoilerEmpty && !waterLevelTripped)
     {
@@ -4903,7 +5030,11 @@ void loop()
 
     if (!brewLeverLifted)
     {
-      if (enableSteamBoost)
+      if (lowWaterGracePeriodActive || waterLevelTripped)
+      {
+        transitionToState(WATER_EMPTY);
+      }
+      else if (enableSteamBoost)
       {
         transitionToState(STEAM_BOOST);
       }
