@@ -211,6 +211,7 @@ int espNowCurrentLength = 0;
 const unsigned long ESP_NOW_SEND_INTERVAL_MS = 250;
 static unsigned long lastEspNowSendTime = 0;
 volatile bool espNowBusy = false;
+volatile bool pendingScreenSync = false;
 #endif
 
 #ifdef HAS_SCALE
@@ -909,9 +910,7 @@ void OnDataRecv(const uint8_t *mac_addr, const uint8_t *incomingData, int len)
       esp_now_send(screenMacAddress, (uint8_t *)&pairingData, sizeof(pairingData));
 
       isScreenPaired = true;
-      printlnToAll("Syncing all settings and state to new screen.");
-      publishSettings();
-      publishState();
+      pendingScreenSync = true;
     }
   }
 
@@ -958,7 +957,7 @@ void sendEspNowBuffer()
     unsigned long waitStart = millis();
     while (espNowBusy)
     {
-      if (millis() - waitStart > 50)
+      if (millis() - waitStart > 250)
       {
         espNowBusy = false;
         break;
@@ -3887,7 +3886,7 @@ void publishAllProfiles()
 
       publishData(mqtt_topic_profile_data, jsonBuffer, true, true);
 
-      delay(20);
+      delay(100);
     }
   }
 }
@@ -4787,15 +4786,22 @@ void loop()
   if (isOnline)
   {
     ArduinoOTA.handle();
-
-#ifdef HAS_SCREEN
-    if (nowTime - lastEspNowSendTime > ESP_NOW_SEND_INTERVAL_MS)
-    {
-      sendEspNowBuffer();
-      lastEspNowSendTime = nowTime;
-    }
-#endif
   }
+#ifdef HAS_SCREEN
+  if (nowTime - lastEspNowSendTime > ESP_NOW_SEND_INTERVAL_MS)
+  {
+    sendEspNowBuffer();
+    lastEspNowSendTime = nowTime;
+  }
+  if (pendingScreenSync)
+  {
+    pendingScreenSync = false;
+    printlnToAll("Syncing all settings and state to new screen.");
+    publishSettings();
+    publishState();
+  }
+#endif
+
   handleTelnet();
   pollDigitalInputs();
   updateSensorReadings();
