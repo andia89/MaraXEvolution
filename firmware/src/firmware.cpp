@@ -48,13 +48,13 @@ const int BREW_SWITCH = A6;
 const int ENABLE_LM1830 = D0;
 const int BUZZER = A1;
 const int LEDMAIN = D6;
-const int LEDHEATER = A2;
+const int LEDHEATER = D8;
 const int LEDWATER = D5;
 const int PUMP_RELAY = A3;
 const int COFFEE_RELAY = D7;
 const int HEATER_SSR = A7;
 const int ZERO_CROSS_PIN = D13; // green
-const int PUMP_TRIAC_PIN = A0;  // yellow
+const int PUMP_TRIAC_PIN = A2;  // yellow
 const int ADS_SCLK_PIN = D4;    // scale
 const int ADS_DOUT_PIN = D12;   // scale
 
@@ -1442,67 +1442,94 @@ void processCommand(char *command)
 
   if (strcasecmp(cmd, "help") == 0)
   {
-    printlnToAll("--- GENERAL COMMANDS ---");
-    printlnToAll("  help              - Shows this message.");
-    printlnToAll("  status            - Prints system status.");
-    printlnToAll("  exit              - Closes the Telnet connection.");
-    printlnToAll("  reboot            - Restarts the device.");
-    printlnToAll("  factoryreset      - Performs a factory reset (clears WiFi and MQTT settings).");
-    printlnToAll("  macaddress        - Prints WiFi MAC.");
-    printlnToAll("  lasterror         - Shows last critical error.");
-    printlnToAll("  debug             - Toggle DEBUG mode.");
+    printlnToAll("================ ESPRESSO TELNET CLI ================");
+    printlnToAll("--- SYSTEM COMMANDS ---");
+    printlnToAll("  help                     - Show this help menu.");
+    printlnToAll("  status                   - Print real-time system, pin, and profile status.");
+    printlnToAll("  lasterror                - Display the last recorded critical error.");
+    printlnToAll("  macaddress               - Print WiFi MAC address.");
+    printlnToAll("  debug                    - Toggle DEBUG state (enables manual hardware controls).");
+    printlnToAll("  reboot                   - Restart the ESP32.");
+    printlnToAll("  factoryreset             - Erase all NVS flash settings, profiles & WiFi.");
+    printlnToAll("  exit                     - Close Telnet connection.");
 
     printlnToAll("");
-    printlnToAll("--- CONTROL & SETTINGS ---");
-    printlnToAll("  set <key>=<val>   - Update settings.");
-    printlnToAll("  flush <ms>        - Run pump (Idle/Heating only).");
+    printlnToAll("--- OPERATION & SETTINGS ---");
+    printlnToAll("  flush <ms>               - Run programmatic pump flush (IDLE/HEATING only).");
+    printlnToAll("  set <key>=<value>        - Update machine settings/parameters.");
+    printlnToAll("    Keys: tempsetbrew=<val|auto>, tempsetsteam=<val>, tempsetsteamboost=<val>");
+    printlnToAll("          brewmode=<coffee|steam|auto>, steamboost=<true|false>");
+    printlnToAll("          kp_temperature=<val>, ki_temperature=<val>, kd_temperature=<val>");
+    printlnToAll("          profiling_mode=<manual|flat|profile>, profiling_flat_value=<val>");
+    printlnToAll("          profiling_source=<flow|pressure>, profiling_target=<time|weight>");
+    printlnToAll("          active_profile_id=<0-19>, profile_data=<json>");
+    printlnToAll("          mqtt_server=<ip>, mqtt_port=<port>, mqtt_user=<u>, mqtt_password=<p>");
+    printlnToAll("          start_cleaning=true, request=true");
 #ifdef HAS_PRESSURE_GAUGE
-    printlnToAll("  pumppid           - View Pump PID constants.");
+    printlnToAll("          kp_pressure=<val>, ki_pressure=<val>, kd_pressure=<val>");
 #endif
+#ifdef HAS_SCALE
+    printlnToAll("          kp_flow=<val>, ki_flow=<val>, kd_flow=<val>");
+    printlnToAll("          flow_kalman_me=<val>, flow_kalman_e=<val>, flow_kalman_q=<val>");
+    printlnToAll("          weight_kalman_me=<val>, weight_kalman_e=<val>, weight_kalman_q=<val>");
+#endif
+
+#ifdef HAS_PRESSURE_GAUGE
+    printlnToAll("");
+    printlnToAll("--- PRESSURE SENSOR COMMANDS ---");
+    printlnToAll("  pumppid                  - View current pressure PID tuning constants.");
+#endif
+
 #ifdef HAS_SCREEN
-    printlnToAll("  espnow <msg>      - Send test message.");
+    printlnToAll("");
+    printlnToAll("--- SCREEN / ESP-NOW COMMANDS ---");
+    printlnToAll("  espnow <msg>             - Broadcast raw string payload over ESP-NOW.");
 #endif
 
 #ifdef HAS_SCALE
     printlnToAll("");
-    printlnToAll("--- SCALE COMMANDS ---");
-    printlnToAll("  tare_scale        - Tare the scale.");
-    printlnToAll("  calibratescale    - Start calibration wizard.");
-    printlnToAll("  calibratenext <g> - Next step (tare or weigh).");
-    printlnToAll("  updatepcf         - Force update the pin state of the PCF8575");
+    printlnToAll("--- SCALE COMMANDS (ADS1232) ---");
+    printlnToAll("  tare_scale               - Reset weight to 0.0g and calculate zero offset.");
+    printlnToAll("  calibratescale <grams>   - Start scale calibration wizard with known weight.");
+    printlnToAll("  calibratenext [grams]    - Advance calibration step (Step 1: Tare / Step 2: Weigh).");
+    printlnToAll("  updatepcf                - Force I2C sync of pin state to PCF8574 expander.");
 #endif
 
     if (currentState == DEBUG)
     {
       printlnToAll("");
-      printlnToAll("--- DEBUG HARDWARE COMMANDS ---");
-      printlnToAll("  heater on|off          - Manually toggle Heater SSR.");
-      printlnToAll("  pump on|off            - Manually toggle Pump Relay.");
-      printlnToAll("  fillvalve on|off       - Manually toggle Fill Valve.");
-      printlnToAll("  buzzer on|off          - Manually toggle Buzzer.");
-      printlnToAll("  led[main|heater|water] on|off - Toggle specific LEDs.");
-      printlnToAll("  dimmer <0-100>         - Set pump dimmer brightness %.");
-      printlnToAll("  pidoutput <0-100|auto> - Set manual heater duty cycle %.");
-      printlnToAll("  checkic                - Test LM1830 water sensor logic.");
-      printlnToAll("  writepin <name> <hi|lo> - Write HIGH/LOW to any output pin.");
-      printlnToAll("  readpin <name>         - Read state of any input pin.");
+      printlnToAll("--- DEBUG HARDWARE CONTROL ---");
+      printlnToAll("  heater on|off            - Force toggle Heater SSR.");
+      printlnToAll("  pump on|off              - Force toggle Pump Relay.");
+      printlnToAll("  fillvalve on|off         - Force toggle Boiler Fill Valve.");
+      printlnToAll("  buzzer on|off            - Force toggle Buzzer.");
+      printlnToAll("  ledmain on|off           - Force toggle Main Power LED.");
+      printlnToAll("  ledheater on|off         - Force toggle Heater LED.");
+      printlnToAll("  ledwater on|off          - Force toggle Water Tank LED.");
+#ifdef HAS_PRESSURE_GAUGE
+      printlnToAll("  dimmer <0-100>           - Set Triac pump phase angle / brightness %.");
+#endif
+      printlnToAll("  pidoutput <0-100|auto>   - Set manual heater duty cycle % or return to auto.");
+      printlnToAll("  writepin <name|pin> <hi|lo> - Write digital state directly to pin.");
+      printlnToAll("  checkic                  - Test LM1830 water probe detection logic.");
 
       printlnToAll("");
-      printlnToAll("--- DEBUG SENSORS ---");
-      printlnToAll("  readweight             - Read filtered, raw, and ADC weight values.");
-      printlnToAll("  readadc <0-3>          - Read raw value from ADS1115 channel.");
-      printlnToAll("  readhxtemp             - Read current HX temperature.");
-      printlnToAll("  readboilertemp         - Read current Boiler temperature.");
-      printlnToAll("  computedboiler         - Show calculated steady-state boiler target.");
-      printlnToAll("  restartreason          - Show reason for last ESP reset.");
+      printlnToAll("--- DEBUG SENSOR READINGS ---");
+      printlnToAll("  readpin <name|pin>       - Read digital logic state of an input pin.");
+      printlnToAll("  readadc <0-3>            - Read raw ADS1115 ADC counts and converted voltage.");
+      printlnToAll("  readhxtemp               - Read HX NTC temperature and raw ADC data.");
+      printlnToAll("  readboilertemp           - Read Boiler NTC temperature and raw ADC data.");
+      printlnToAll("  computedboiler           - View target steady-state boiler temperature.");
+      printlnToAll("  restartreason            - Print ESP32 reset reason code.");
 #ifdef HAS_PRESSURE_GAUGE
-      printlnToAll("  readpress              - Read current pressure (bar).");
+      printlnToAll("  readpress                - Read active pressure sensor (bar & volts).");
 #endif
 #ifdef HAS_SCALE
-      printlnToAll("  rawdata [on|off]       - Stream raw/filtered scale data via ESP-NOW.");
-
+      printlnToAll("  readweight               - Read filtered, instant, raw ADC counts & cal factors.");
+      printlnToAll("  rawdata [on|off]         - Toggle scale raw/filtered streaming over ESP-NOW.");
 #endif
     }
+    printlnToAll("======================================================");
   }
   else if (strcasecmp(cmd, "reboot") == 0)
   {
@@ -2013,9 +2040,16 @@ void printStatus()
   printToAll("C, HX: ");
   printToAll(hxTemp);
 #ifdef HAS_PRESSURE_GAUGE
+  int16_t rawPressADC = readADSADC(PRESSURE);
+  float pressVolts = (float)rawPressADC / NEW_ADC_MAX * V_REF_NEW;
+
   printToAll("C, Pressure: ");
   printToAll(pressure);
-  printlnToAll(" bar");
+  printToAll(" bar (Raw ADC: ");
+  printToAll(rawPressADC);
+  printToAll(", ");
+  printToAll(pressVolts, 3);
+  printlnToAll("V)");
 #else
   printlnToAll("C");
 #endif
@@ -4199,9 +4233,18 @@ void IRAM_ATTR dataReadyISR()
  */
 void updatePcf()
 {
+  Wire.setClock(100000);
   Wire.beginTransmission(PCF8574_ADDRESS);
   Wire.write(pcfState);
-  Wire.endTransmission();
+
+  byte error = Wire.endTransmission();
+  Wire.setClock(400000);
+
+  if (error != 0)
+  {
+    printToAll("FAILED! Error Code: ");
+    printlnToAll(error);
+  }
 }
 
 /**
@@ -4290,6 +4333,9 @@ void handleScale()
   if (newDataReady)
   {
     long raw_data = readADCScale();
+    portENTER_CRITICAL(&scaleMux);
+    newDataReady = false;
+    portEXIT_CRITICAL(&scaleMux);
     if (raw_data == -2 || raw_data == -1)
     {
       return;
@@ -4410,16 +4456,30 @@ long getStableCombinedReadingADS1232(int times)
 
   for (int i = 0; i < 4; i++)
   {
+    unsigned long waitStart = millis();
     while (digitalRead(ADS_DOUT_PIN) == HIGH)
     {
+      if (millis() - waitStart > 1000)
+      {
+        printlnToAll("Scale Error: DOUT stuck HIGH (Setup)");
+        attachInterrupt(digitalPinToInterrupt(ADS_DOUT_PIN), dataReadyISR, FALLING);
+        return 0; // Escape the loop
+      }
     }
     readADCScale();
   }
 
   for (int i = 0; i < times; i++)
   {
+    unsigned long waitStart = millis();
     while (digitalRead(ADS_DOUT_PIN) == HIGH)
     {
+      if (millis() - waitStart > 1000)
+      {
+        printlnToAll("Scale Error: DOUT stuck HIGH (Reading)");
+        attachInterrupt(digitalPinToInterrupt(ADS_DOUT_PIN), dataReadyISR, FALLING);
+        return 0;
+      }
     }
     long val = readADCScale();
     if (val == -1)
@@ -4429,6 +4489,7 @@ long getStableCombinedReadingADS1232(int times)
     }
     total += val;
   }
+
   long avg = total / times;
   printToAll("  Avg ADC: ");
   printlnToAll(avg);
@@ -4614,6 +4675,7 @@ void setup()
   updateCalculatedBoilerTemp();
   printlnToAll("Initializing ADS1115...");
   Wire.begin(A4, A5);
+  Wire.setTimeOut(150);
   if (!ads.begin())
   {
     printlnToAll("Failed to initialize ADS1115. Check wiring.");
