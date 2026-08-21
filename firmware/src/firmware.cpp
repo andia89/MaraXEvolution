@@ -2236,6 +2236,7 @@ void handleStateEntry(MachineState newState)
     break;
 
   case HEATING:
+    enableWaterLevelSensor(false);
     heaterPID.SetMode(MANUAL);
     heaterPID.SetMode(AUTOMATIC);
     stableTempStartTime = 0;
